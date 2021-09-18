@@ -302,7 +302,6 @@ bool T_driver::gpioWrite(int num, bool value) {
     if(!(res_gpio->write(num, value) == true)) {
         return false;
     }
-    // res_gpio->write(num, value);
 
     return true;
 }
