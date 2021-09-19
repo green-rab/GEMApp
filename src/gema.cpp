@@ -28,6 +28,14 @@
 // void T_service::dummy_service01_rawImpl() {}
 // void T_service::dummy_service02_rawImpl() {}
 
+#include "../service/dummy_service01.h"
+
+#include <stdlib.h>
+
+
+T_dummy_service01 dummy_service01 = T_dummy_service01();
+
 
 void execute_sync10ms() {
+    dummy_service01.execute();
 }

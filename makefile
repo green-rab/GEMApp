@@ -5,6 +5,7 @@ BIN     := bin
 SRC     := src
 TST		:= test
 TST_SPY := test/spy
+SERVICE := service
 INCLUDE := include
 
 LIBRARIES   :=
@@ -21,7 +22,7 @@ all: $(BIN)/$(EXECUTABLE)
 
 run: clean all clear ./$(BIN)/$(EXECUTABLE)
 
-$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp $(TST)/*.cpp $(TST_SPY)/*.cpp
+$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp $(TST)/*.cpp $(TST_SPY)/*.cpp $(SERVICE)/*.cpp
 		$(CXX) $(CXX_FLAGS) -I$(INCLUDE) $^ -o $@ $(LIBRARIES)
 
 clean:

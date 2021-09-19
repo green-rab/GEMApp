@@ -18,7 +18,14 @@ using namespace std;
 #include "../include/global.h"
 
 #include "spy/spy_utilsOutput.h"
-#include "spy/spy_userServices.h"
+
+#include "../service/dummy_service01.h"
+
+
+/**
+    ## Use dummy services as spy for tests ##
+**/
+extern T_dummy_service01 dummy_service01;
 
 
 /**
@@ -29,13 +36,11 @@ TEST_GROUP(tg_service) {
     T_service *cut_service;
 
     // SPYs
-    T_spy_utilsOutput  *spy_utilsOutput;
-    T_spy_userServices *spy_userServices;
+    T_spy_utilsOutput *spy_utilsOutput;
 
     void setup() {
         // init SPYs
         spy_utilsOutput  = new T_spy_utilsOutput(1000);
-        spy_userServices = new T_spy_userServices();
 
         // init STUBs
     
@@ -43,10 +48,6 @@ TEST_GROUP(tg_service) {
         cut_service = new T_service();
 
         // set function pointers
-        // cut_service->dummy_service01_raw = spy_userServices->userService_01;
-        // cut_service->dummy_service02_raw = spy_userServices->userService_02;
-        // cut_driver->res_gpio = spy_gpio;
-
         UT_PTR_SET(callPrintf, spy_utilsOutput->printf);
     }
 
@@ -54,17 +55,11 @@ TEST_GROUP(tg_service) {
         delete cut_service;
         cut_service = NULL;
 
-        delete spy_userServices;
-        spy_userServices = NULL;
-
         delete spy_utilsOutput;
         spy_utilsOutput = NULL;
 
         // mock().clear();
     }
-
-    // static void userService_01() { spy_userServices->userService_01(); };
-    // static void userService_02() { spy_userServices->userService_02(); };
 };
 
 
@@ -127,14 +122,14 @@ TEST(tg_service, tc_service_sync10ms_executeOnce) {
     // preconditions
 
     // exp.0: check initialization state
-    CHECK_EQUAL(0, spy_userServices->test_getServiceCalls(1));
+    CHECK_EQUAL(0, dummy_service01.test_getServiceCalls());
 
     // a.1: call init function
     ret_init = cut_service->init_scheduleSync10ms();
 
     // exp.1: check return and service is called
     CHECK_EQUAL(true, ret_init);
-    CHECK_EQUAL(1, spy_userServices->test_getServiceCalls(1));
+    CHECK_EQUAL(1, dummy_service01.test_getServiceCalls());
 }
 TEST(tg_service, tc_service_sync10ms_executePeriodically) {
 }
