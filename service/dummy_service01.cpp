@@ -34,6 +34,14 @@ void T_dummy_service01::execute() {
 
 
 /**
+    ## T_dummy_service01 :: test_reset(..) - For test only: Reset dummy to init values ##
+**/
+void T_dummy_service01::test_reset() {
+    test_serviceCalls = 0;
+}
+
+
+/**
     ## T_dummy_service01 :: test_getServiceCalls(..) - For test only: Return count of calls ##
 **/
 int T_dummy_service01::test_getServiceCalls() {

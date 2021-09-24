@@ -26,6 +26,7 @@ class T_dummy_service01 {
         void execute();
 
         // only for test-cases
+        void test_reset();
         int test_getServiceCalls();
 };
 

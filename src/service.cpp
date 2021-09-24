@@ -14,6 +14,8 @@
 #include "../include/gema.h"
 #include "../include/service.h"
 
+#include <time.h>
+
 
 /**
     ## T_service :: Constructor ##
@@ -35,7 +37,15 @@ T_service::~T_service() {
 bool T_service::init_scheduleSync10ms() {
     callPrintf("Schedule sync 10 ms initialization.. successful\n");
 
-    execute_sync10ms();
+    struct timespec t_sleep_10ms = {0, 10000000L};  //10 ms
+    int cnt = 0;
+
+    while(cnt < 15) {
+        execute_sync10ms();
+
+        nanosleep(&t_sleep_10ms, NULL);
+        cnt++;
+    };
 
     return true;
 }
