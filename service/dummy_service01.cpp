@@ -29,6 +29,13 @@ T_dummy_service01::~T_dummy_service01() {
     ## T_dummy_service01 :: execute() - Run the service ##
 **/
 void T_dummy_service01::execute() {
+    if(test_serviceCalls == 0) {
+        test_timeStart = std::chrono::steady_clock::now();
+    }
+    if(test_serviceCalls < TEST_TIME_SAMPLES) {
+        test_timestamps[test_serviceCalls] = std::chrono::duration<double>(std::chrono::steady_clock::now() - test_timeStart).count();
+    }
+
     test_serviceCalls++;
 }
 
@@ -46,4 +53,16 @@ void T_dummy_service01::test_reset() {
 **/
 int T_dummy_service01::test_getServiceCalls() {
     return test_serviceCalls;
+}
+
+
+/**
+    ## T_dummy_service01 :: test_getServiceTimestamp(..) - For test only: Return timestamp of specific call ##
+**/
+double T_dummy_service01::test_getServiceTimestamp(int sample) {
+    if(sample >= TEST_TIME_SAMPLES) {
+        return -1;
+    }
+
+    return test_timestamps[sample];
 }

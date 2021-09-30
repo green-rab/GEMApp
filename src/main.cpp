@@ -14,6 +14,7 @@
 #include "../include/main.h"
 
 #include "../include/driver.h"
+#include "../include/service.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -24,6 +25,8 @@
 **/
 T_driver driver;
 T_enum_driverState driverState;
+
+T_service service;
 
 
 /**
@@ -60,6 +63,7 @@ int main_func(int argc, char** argv) {
 
     // initialize SERVICE
     // ...
+    // service.init_scheduleSync10ms();
 
     return 0;
 }

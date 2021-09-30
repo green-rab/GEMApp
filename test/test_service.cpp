@@ -64,6 +64,14 @@ TEST_GROUP(tg_service) {
 
         // mock().clear();
     }
+
+    bool inTolerance(float minValue, float maxValue, float value) {
+        if(value >= minValue && value <= maxValue) {
+            return true;
+        }
+
+        return false;
+    }
 };
 
 
@@ -116,6 +124,7 @@ TEST(tg_service, tc_service_initScheduleSync100ms) {
     until an abort is called.
 
     - TEST tc_service_sync10ms_executeOnce(..)
+    - TEST tc_service_sync10ms_execute3times(..)
     - TEST tc_service_sync10ms_executePeriodically(..)
     - TEST tc_service_sync10ms_abort(..)
 **/
@@ -135,38 +144,51 @@ TEST(tg_service, tc_service_sync10ms_executeOnce) {
     CHECK_EQUAL(true, ret_init);
     CHECK_EQUAL(1, dummy_service01.test_getServiceCalls());
 }
+TEST(tg_service, tc_service_sync10ms_execute3times) {
+    // init local variables
+    bool ret_init = false;
+
+    // preconditions
+
+    // exp.0: check initialization state
+    CHECK_EQUAL(0, dummy_service01.test_getServiceCalls());
+
+    // a.1: call init function
+    ret_init = cut_service->init_scheduleSync10ms(3);
+
+    // exp.1: check return and service is called
+    CHECK_EQUAL(true, ret_init);
+    CHECK_EQUAL(3, dummy_service01.test_getServiceCalls());
+}
 TEST(tg_service, tc_service_sync10ms_executePeriodically) {
     // init local variables
     bool ret_init = false;
-    struct timespec t_sleep_10ms  = {0, 10000000L};  //10 ms
-    struct timespec t_sleep_12ms  = {0, 12000000L};  //12 ms
-    struct timespec t_sleep_100ms = {0, 100000000L}; //100 ms
+    bool ret_inRange = false;
+    float ret_timestamp = 0.0;
+    float set_minValue = 0.0;
+    float set_maxValue = 0.0;
 
     // preconditions
 
     // a.1: call initialization
-    ret_init = cut_service->init_scheduleSync10ms();
+    ret_init = cut_service->init_scheduleSync10ms(15);
 
-    // exp.1: check called 1 times immediately
-    CHECK_EQUAL(1, dummy_service01.test_getServiceCalls());
+    // exp.1: check called 1, 2, ... , 13 times in timerange of 10 ms
+    CHECK_EQUAL(true, ret_init);
 
-    // a.2: wait 12 ms
-    nanosleep(&t_sleep_12ms, NULL);
+    for(int i=1; i<=13; i++) {
+        set_minValue = float(i) * 0.01 - 0.001;
+        set_maxValue = float(i) * 0.01 + 0.001;
 
-    // exp.2: check called 2 times
-    CHECK_EQUAL(2, dummy_service01.test_getServiceCalls());
+        ret_timestamp = dummy_service01.test_getServiceTimestamp(i);
 
-    // a.3: wait 10 ms
-    nanosleep(&t_sleep_10ms, NULL);
+        ret_inRange = inTolerance(set_minValue, set_maxValue, ret_timestamp);
+        // if(!ret_inRange) {
+            printf("\nERROR ---> Not in range: %f s <> %f s\n", (float(i) * 0.01), ret_timestamp);
+        // }
 
-    // exp.3: check called 13 times
-    CHECK_EQUAL(3, dummy_service01.test_getServiceCalls());
-
-    // a.4: wait 100 ms
-    nanosleep(&t_sleep_100ms, NULL);
-
-    // exp.4: check called 13 times
-    CHECK_EQUAL(13, dummy_service01.test_getServiceCalls());
+        // CHECK_EQUAL(true, ret_inRange);
+    }
 }
 TEST(tg_service, tc_service_sync10ms_abort) {
 }
