@@ -65,6 +65,8 @@ int main_func(int argc, char** argv) {
     // ...
     // service.init_scheduleSync10ms();
 
+    // while(T_service::run_scheduleSync10ms == true);
+
     return 0;
 }
 

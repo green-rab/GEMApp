@@ -12,67 +12,61 @@
 
 #include <time.h>
 #include <thread>
+#include <chrono>
 
 #include "../include/global.h"
 #include "../include/gema.h"
 #include "../include/service.h"
 
 
-
-#include <stdio.h>
-#include <chrono>
-#include <functional>
-
 /**
     ## T_service :: Constructor ##
 **/
 T_service::T_service() {
-    running_scheduleSync10ms = false;
 }
+bool T_service::run_scheduleSync10ms = false;  // because static
+bool T_service::stop_scheduleSync10ms = false; // because static
 
 
 /**
     ## T_service :: Destructor ##
 **/
 T_service::~T_service() {
+    cancel_scheduleSync10ms();
+
+    while(T_service::run_scheduleSync10ms);
 }
 
 
 /**
-    ## PRIVATE T_service :: task_scheduleSync10ms() - Thread for sync 10 ms ##
+    ## PRIVATE T_service :: task_scheduleSync10ms(..) - Task for sync 10 ms ##
 **/
-void T_service::task_scheduleSync10ms() {
-    // struct timespec t_sleep_10ms = {0, 10000000L};  //10 ms
-    // static sint cnt = 0;
+void T_service::task_scheduleSync10ms(uint16_t n_times) {
+    // static class variables
+    T_service::run_scheduleSync10ms = true;
+    T_service::stop_scheduleSync10ms = false;
 
-    // cnt++;
+    // local variables
+    uint16_t count = 0;
+    auto const start_time = std::chrono::steady_clock::now();
+    auto const wait_time = std::chrono::milliseconds{10};
+    auto next_time = start_time + wait_time;
 
-    // while(cnt < 15) {
-        execute_sync10ms();
+    // execution loop
+    while(T_service::stop_scheduleSync10ms == false && (count < n_times || n_times == 0)) {
+        std::this_thread::sleep_until(next_time);
+        next_time += wait_time;
 
-    //     nanosleep(&t_sleep_10ms, NULL);
-    //     cnt++;
-
-        // printf("execute_sync10ms -> %d\n", cnt);
-    // };
-}
-
-
-void T_service::timer_start(std::function<void(void)> func, unsigned int interval, uint16_t n_times, bool &status) {
-    std::thread([func, interval, n_times, &status] {
-    // std::thread timer1(func, interval, n_times, &status);
-        auto timeStart = std::chrono::steady_clock::now();
-        func();
-
-        for(uint16_t i=1; i<n_times; i++) {
-            auto timeGo = timeStart + std::chrono::milliseconds(interval * i);
-            std::this_thread::sleep_until(timeGo);
-
-            func();
+        if(stop_scheduleSync10ms == false) {
+            // --> todo: read inputs
+            execute_sync10ms();
+            // <-- todo: write back outputs
         }
 
-        status = false;
-    }).detach();
+        if(n_times != 0) count++;
+    }
+
+    T_service::run_scheduleSync10ms = false;
 }
 
 
@@ -82,16 +76,19 @@ void T_service::timer_start(std::function<void(void)> func, unsigned int interva
 bool T_service::init_scheduleSync10ms(uint16_t n_times) {
     callPrintf("Schedule sync 10 ms initialization.. successful\n");
 
-    running_scheduleSync10ms = true;
-    timer_start(task_scheduleSync10ms, 10, n_times, running_scheduleSync10ms);
-    // for(uint16_t i=0; i<n_times; i++) {
-    //     thread_scheduleSync10ms();
+    T_service::run_scheduleSync10ms = true;
+    std::thread t_10ms(T_service::task_scheduleSync10ms, n_times);
+    t_10ms.detach();
 
-    //     struct timespec t_sleep_10ms = {0, 10000000L};  //10 ms
-    //     nanosleep(&t_sleep_10ms, NULL);
-    // }
+    return true;
+}
 
-    while(running_scheduleSync10ms);
+
+/**
+    ## T_service :: cancel_scheduleSync10ms() - Cancel sync 10 ms ##
+**/
+bool T_service::cancel_scheduleSync10ms() {
+    T_service::stop_scheduleSync10ms = true;
 
     return true;
 }

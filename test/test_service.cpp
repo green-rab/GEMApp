@@ -141,6 +141,7 @@ TEST(tg_service, tc_service_sync10ms_executeOnce) {
     ret_init = cut_service->init_scheduleSync10ms();
 
     // exp.1: check return and service is called
+    while(T_service::run_scheduleSync10ms == true);
     CHECK_EQUAL(true, ret_init);
     CHECK_EQUAL(1, dummy_service01.test_getServiceCalls());
 }
@@ -157,6 +158,7 @@ TEST(tg_service, tc_service_sync10ms_execute3times) {
     ret_init = cut_service->init_scheduleSync10ms(3);
 
     // exp.1: check return and service is called
+    while(T_service::run_scheduleSync10ms == true);
     CHECK_EQUAL(true, ret_init);
     CHECK_EQUAL(3, dummy_service01.test_getServiceCalls());
 }
@@ -174,23 +176,44 @@ TEST(tg_service, tc_service_sync10ms_executePeriodically) {
     ret_init = cut_service->init_scheduleSync10ms(15);
 
     // exp.1: check called 1, 2, ... , 13 times in timerange of 10 ms
+    while(T_service::run_scheduleSync10ms == true);
     CHECK_EQUAL(true, ret_init);
 
     for(int i=1; i<=13; i++) {
-        set_minValue = float(i) * 0.01 - 0.001;
-        set_maxValue = float(i) * 0.01 + 0.001;
+        set_minValue = float(i) * 0.01 - 0.003;
+        set_maxValue = float(i) * 0.01 + 0.003;
 
         ret_timestamp = dummy_service01.test_getServiceTimestamp(i);
 
         ret_inRange = inTolerance(set_minValue, set_maxValue, ret_timestamp);
-        // if(!ret_inRange) {
+        if(!ret_inRange) {
             printf("\nERROR ---> Not in range: %f s <> %f s\n", (float(i) * 0.01), ret_timestamp);
-        // }
+        }
 
-        // CHECK_EQUAL(true, ret_inRange);
+        CHECK_EQUAL(true, ret_inRange);
     }
 }
 TEST(tg_service, tc_service_sync10ms_abort) {
+    // init local variables
+    bool ret_init = false;
+    bool ret_cancel = false;
+
+    // preconditions
+
+    // a.1: call init function with parameter 0 (endless loop)
+    ret_init = cut_service->init_scheduleSync10ms(0);
+
+    // exp.1: check return
+    CHECK_EQUAL(true, ret_init);
+
+    // a.2: call cancel function at 10rd service call
+    while(dummy_service01.test_getServiceCalls() < 10);
+    ret_cancel = cut_service->cancel_scheduleSync10ms();
+
+    // exp.2: check service is called and canceled
+    while(T_service::run_scheduleSync10ms == true);
+    CHECK_EQUAL(true, ret_cancel);
+    CHECK_EQUAL(10, dummy_service01.test_getServiceCalls());
 }
 
 
