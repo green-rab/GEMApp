@@ -15,6 +15,6 @@
 T_dummy_service01 dummy_service01 = T_dummy_service01();
 
 
-void execute_sync10ms() {
-    dummy_service01.execute();
+void execute_sync10ms(t_GEMA_data &data) {
+    dummy_service01.execute(data);
 }

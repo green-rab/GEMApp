@@ -12,9 +12,21 @@
 
 
 /**
+    ## Datatype ##
+**/
+struct t_GEMA_data {
+    bool GPIO_05;
+    bool GPIO_06;
+    bool GPIO_12;
+    bool GPIO_13;
+    bool GPIO_26;
+};
+
+
+/**
     ## Prototypes ##
 **/
-void execute_sync10ms();
+void execute_sync10ms(t_GEMA_data &data);
 
 
 #endif

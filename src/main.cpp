@@ -26,7 +26,7 @@
 T_driver driver;
 T_enum_driverState driverState;
 
-T_service service;
+T_service service(&driver);
 
 
 /**

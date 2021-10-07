@@ -14,6 +14,8 @@
 
 #include "../include/res_gpio.h"
 
+#include <string>
+
 
 /**
     ## Conversion of constants from config.h to string ##

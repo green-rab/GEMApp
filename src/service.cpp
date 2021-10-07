@@ -22,7 +22,8 @@
 /**
     ## T_service :: Constructor ##
 **/
-T_service::T_service() {
+T_service::T_service(T_driver *driver) {
+    ptr_driver = driver;
 }
 bool T_service::run_scheduleSync10ms = false;  // because static
 bool T_service::stop_scheduleSync10ms = false; // because static
@@ -48,6 +49,8 @@ void T_service::task_scheduleSync10ms(uint16_t n_times) {
 
     // local variables
     uint16_t count = 0;
+    t_GEMA_data data;
+
     auto const start_time = std::chrono::steady_clock::now();
     auto const wait_time = std::chrono::milliseconds{10};
     auto next_time = start_time + wait_time;
@@ -58,9 +61,14 @@ void T_service::task_scheduleSync10ms(uint16_t n_times) {
         next_time += wait_time;
 
         if(stop_scheduleSync10ms == false) {
-            // --> todo: read inputs
-            execute_sync10ms();
-            // <-- todo: write back outputs
+            // --> read inputs
+            data.GPIO_05 = ptr_driver->gpioRead(05);
+
+            // execute user services
+            execute_sync10ms(data);
+
+            // <-- write back outputs
+            // ...
         }
 
         if(n_times != 0) count++;

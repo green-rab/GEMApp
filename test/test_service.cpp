@@ -18,6 +18,7 @@ using namespace std;
 #include "../include/service.h"
 #include "../include/global.h"
 
+#include "spy/spy_driver.h"
 #include "spy/spy_utilsOutput.h"
 
 #include "../service/dummy_service01.h"
@@ -37,11 +38,13 @@ TEST_GROUP(tg_service) {
     T_service *cut_service;
 
     // SPYs
+    T_spy_driver      *spy_driver;
     T_spy_utilsOutput *spy_utilsOutput;
 
     void setup() {
         // init SPYs
-        spy_utilsOutput  = new T_spy_utilsOutput(1000);
+        spy_driver      = new T_spy_driver();
+        spy_utilsOutput = new T_spy_utilsOutput(1000);
 
         // init STUBs
 
@@ -49,7 +52,7 @@ TEST_GROUP(tg_service) {
         dummy_service01.test_reset();
     
         // init CUT
-        cut_service = new T_service();
+        cut_service = new T_service(spy_driver);
 
         // set function pointers
         UT_PTR_SET(callPrintf, spy_utilsOutput->printf);
@@ -58,6 +61,9 @@ TEST_GROUP(tg_service) {
     void teardown() {
         delete cut_service;
         cut_service = NULL;
+
+        delete spy_driver;
+        spy_driver = NULL;
 
         delete spy_utilsOutput;
         spy_utilsOutput = NULL;
@@ -218,9 +224,33 @@ TEST(tg_service, tc_service_sync10ms_abort) {
 
 
 /**
-    At the beginning of every execution all GPIO-inputs have to be read and all GPIO-outputs
-    have to be written back at the end of execution.
+    At the beginning of every execution of 'Schedule sync 10 ms' all GPIO-inputs have to be read
+    and all GPIO-outputs have to be written back at the end of execution.
 
-    - TEST tc_service_sync10ms_GPIO(..)
-    - TEST tc_service_sync100ms_GPIO(..)
+    - TEST tc_service_sync10ms_oneInput(..)
+    - TEST tc_service_sync10ms_oneOutput(..)
+    - TEST tc_service_sync10ms_allGPIOs(..)
 **/
+TEST(tg_service, tc_service_sync10ms_oneInput) {
+    // init local variables
+    bool ret_init = false;
+
+    // preconditions
+    spy_driver->test_setReadValue(05, true);
+
+    // exp.0: check initialization state
+    CHECK_EQUAL(false, dummy_service01.data.GPIO_05);
+
+    // a.1: call init function for execution of service
+    ret_init = cut_service->init_scheduleSync10ms(1);
+
+    // exp.1: check value is successfully read
+    CHECK_EQUAL(true, ret_init);
+    CHECK_EQUAL(true, dummy_service01.data.GPIO_05);
+}
+
+
+TEST(tg_service, tc_service_sync10ms_oneOutput) {
+}
+TEST(tg_service, tc_service_sync10ms_allGPIOs) {
+}

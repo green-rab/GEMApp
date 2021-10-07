@@ -10,6 +10,8 @@
 #ifndef DUMMY_SERVICE_01_H
 #define DUMMY_SERVICE_01_H
 
+#include "../include/gema.h"
+
 #include <chrono>
 
 
@@ -31,9 +33,10 @@ class T_dummy_service01 {
         ~T_dummy_service01();
 
         // calls
-        void execute();
+        void execute(t_GEMA_data &newData);
 
         // only for test-cases
+        t_GEMA_data data;
         void test_reset();
         int test_getServiceCalls();
         double test_getServiceTimestamp(int sample);
