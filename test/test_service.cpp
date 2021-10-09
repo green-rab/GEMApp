@@ -147,7 +147,7 @@ TEST(tg_service, tc_service_sync10ms_executeOnce) {
     ret_init = cut_service->init_scheduleSync10ms();
 
     // exp.1: check return and service is called
-    while(T_service::run_scheduleSync10ms == true);
+    while(cut_service->run_scheduleSync10ms == true);
     CHECK_EQUAL(true, ret_init);
     CHECK_EQUAL(1, dummy_service01.test_getServiceCalls());
 }
@@ -164,7 +164,7 @@ TEST(tg_service, tc_service_sync10ms_execute3times) {
     ret_init = cut_service->init_scheduleSync10ms(3);
 
     // exp.1: check return and service is called
-    while(T_service::run_scheduleSync10ms == true);
+    while(cut_service->run_scheduleSync10ms == true);
     CHECK_EQUAL(true, ret_init);
     CHECK_EQUAL(3, dummy_service01.test_getServiceCalls());
 }
@@ -182,7 +182,7 @@ TEST(tg_service, tc_service_sync10ms_executePeriodically) {
     ret_init = cut_service->init_scheduleSync10ms(15);
 
     // exp.1: check called 1, 2, ... , 13 times in timerange of 10 ms
-    while(T_service::run_scheduleSync10ms == true);
+    while(cut_service->run_scheduleSync10ms == true);
     CHECK_EQUAL(true, ret_init);
 
     for(int i=1; i<=13; i++) {
@@ -217,7 +217,7 @@ TEST(tg_service, tc_service_sync10ms_abort) {
     ret_cancel = cut_service->cancel_scheduleSync10ms();
 
     // exp.2: check service is called and canceled
-    while(T_service::run_scheduleSync10ms == true);
+    while(cut_service->run_scheduleSync10ms == true);
     CHECK_EQUAL(true, ret_cancel);
     CHECK_EQUAL(10, dummy_service01.test_getServiceCalls());
 }
@@ -242,9 +242,11 @@ TEST(tg_service, tc_service_sync10ms_oneInput) {
     CHECK_EQUAL(false, dummy_service01.data.GPIO_05);
 
     // a.1: call init function for execution of service
-    ret_init = cut_service->init_scheduleSync10ms(1);
+    printf("<<<< TEST >>>>>\n");
+    ret_init = cut_service->init_scheduleSync10ms(2);
 
     // exp.1: check value is successfully read
+    while(cut_service->run_scheduleSync10ms == true);
     CHECK_EQUAL(true, ret_init);
     CHECK_EQUAL(true, dummy_service01.data.GPIO_05);
 }

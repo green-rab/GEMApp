@@ -29,7 +29,9 @@ T_spy_driver::~T_spy_driver() {
     ## T_spy_driver :: gpioRead(..) - Read single GPIO-value ##
 **/
 bool T_spy_driver::gpioRead(int num) {
-    return gpioValue[num];
+    // return gpioValue[num];
+    printf("<<< gpioRead called >>>\n");
+    return true;
 }
 
 

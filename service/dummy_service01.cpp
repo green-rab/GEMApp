@@ -9,6 +9,8 @@
 
 #include "dummy_service01.h"
 
+#include <stdio.h>
+
 
 /**
     ## T_dummy_service01 :: Constructor ##
@@ -45,6 +47,8 @@ void T_dummy_service01::execute(t_GEMA_data &newData) {
     test_serviceCalls++;
 
     data = newData;
+
+    printf("i: %d ; data: %d ; newData: %d\n", test_serviceCalls, data.GPIO_05, newData.GPIO_05);
 }
 
 
