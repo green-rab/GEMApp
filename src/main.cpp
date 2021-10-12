@@ -23,10 +23,12 @@
 /**
     ## Global properties ##
 **/
-T_driver driver;
+T_driver driver = T_driver();
+// T_driver *ptr_driver = NULL;
 T_enum_driverState driverState;
 
-T_service service(&driver);
+// T_service service = T_service();
+// T_service *ptr_service = NULL;
 
 
 /**
@@ -58,14 +60,22 @@ int main_func(int argc, char** argv) {
     callPrintf("%s", infoText);
 
     // initialize DRIVER
+    // ptr_driver = new T_driver();
     driver.init();
     driverState = driver.getState();
 
     // initialize SERVICE
     // ...
     // service.init_scheduleSync10ms();
+    // ptr_service = new T_service(ptr_driver);
 
     // while(T_service::run_scheduleSync10ms == true);
+
+    // delete ptr_service;
+    // ptr_service = NULL;
+
+    // delete ptr_driver;
+    // ptr_driver = NULL;
 
     return 0;
 }

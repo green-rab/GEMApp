@@ -12,7 +12,7 @@
 
 #include "driver_enum.h"
 
-#include "../include/res_gpio.h"
+#include "res_gpio.h"
 
 #include <string>
 
@@ -87,8 +87,8 @@ class T_driver {
         T_enum_driverState getState();
 
         // HW-Ressource: GPIO
-        bool gpioRead(int num);
-        bool gpioWrite(int num, bool value);
+        virtual bool gpioRead(int num);
+        virtual bool gpioWrite(int num, bool value);
 };
 
 

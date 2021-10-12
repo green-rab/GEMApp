@@ -22,8 +22,8 @@
 /**
     ## T_service :: Constructor ##
 **/
-T_service::T_service(T_driver *driver) {
-    ptr_driver = driver;
+T_service::T_service(T_driver *inst_driver) {
+    ptr_driver = inst_driver;
 
     run_scheduleSync10ms = false;
     stop_scheduleSync10ms = false;
@@ -67,7 +67,9 @@ void T_service::task_scheduleSync10ms(uint16_t n_times) {
             // --> read inputs
             data.GPIO_05 = ptr_driver->gpioRead(05);
 
-            if(n_times == 2) printf("execute -> data: %d\n", data.GPIO_05);
+            // if(n_times == 2) {
+            //     printf("execute -> data: %d\n", data.GPIO_05);
+            // }
 
             // execute user services
             execute_sync10ms(data);
@@ -103,7 +105,7 @@ bool T_service::init_scheduleSync10ms(uint16_t n_times) {
     ## T_service :: cancel_scheduleSync10ms() - Cancel sync 10 ms ##
 **/
 bool T_service::cancel_scheduleSync10ms() {
-    T_service::stop_scheduleSync10ms = true;
+    stop_scheduleSync10ms = true;
 
     return true;
 }

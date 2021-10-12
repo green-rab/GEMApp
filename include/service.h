@@ -18,25 +18,29 @@
 **/
 class T_service {
     private:
+
+    public:
+        T_service(T_driver *inst_driver);
+        ~T_service();
+
         // link to driver-layer
         T_driver *ptr_driver;
 
-    public:
-        // static properties
+        // status running (= true)
         bool run_scheduleSync10ms;
+
+        // stop running (-> set to true)
         bool stop_scheduleSync10ms;
 
-        // static methods
+        // tasks
         void task_scheduleSync10ms(uint16_t n_times);
-
-        T_service(T_driver *driver);
-        ~T_service();
 
         // initialization
         bool init_scheduleSync10ms(uint16_t n_times = 1);
-        bool cancel_scheduleSync10ms();
-
         bool init_scheduleSync100ms();
+
+        // cancels
+        bool cancel_scheduleSync10ms();
 };
 
 

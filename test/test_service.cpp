@@ -242,8 +242,13 @@ TEST(tg_service, tc_service_sync10ms_oneInput) {
     CHECK_EQUAL(false, dummy_service01.data.GPIO_05);
 
     // a.1: call init function for execution of service
-    printf("<<<< TEST >>>>>\n");
-    ret_init = cut_service->init_scheduleSync10ms(2);
+    // printf("<<<< TEST >>>>>\n");
+    // printf("%p ; %p ; %p\n", (void *)spy_driver, (void *)cut_service->ptr_driver, (void *)cut_service);
+    // cut_service->ptr_driver = spy_driver;
+    // printf("%p ; %p\n", (void *)spy_driver, (void *)cut_service->ptr_driver);
+    // printf("%d\n", spy_driver->gpioRead(05));
+    // printf("%d\n", cut_service->ptr_driver->gpioRead(05));
+    ret_init = cut_service->init_scheduleSync10ms(1);
 
     // exp.1: check value is successfully read
     while(cut_service->run_scheduleSync10ms == true);

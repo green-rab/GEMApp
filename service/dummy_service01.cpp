@@ -48,7 +48,7 @@ void T_dummy_service01::execute(t_GEMA_data &newData) {
 
     data = newData;
 
-    printf("i: %d ; data: %d ; newData: %d\n", test_serviceCalls, data.GPIO_05, newData.GPIO_05);
+    // printf("i: %d ; data: %d ; newData: %d\n", test_serviceCalls, data.GPIO_05, newData.GPIO_05);
 }
 
 
