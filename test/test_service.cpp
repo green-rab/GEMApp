@@ -147,7 +147,7 @@ TEST(tg_service, tc_service_sync10ms_executeOnce) {
     ret_init = cut_service->init_scheduleSync10ms();
 
     // exp.1: check return and service is called
-    while(cut_service->run_scheduleSync10ms == true);
+    while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
     CHECK_EQUAL(1, dummy_service01.test_getServiceCalls());
 }
@@ -164,7 +164,7 @@ TEST(tg_service, tc_service_sync10ms_execute3times) {
     ret_init = cut_service->init_scheduleSync10ms(3);
 
     // exp.1: check return and service is called
-    while(cut_service->run_scheduleSync10ms == true);
+    while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
     CHECK_EQUAL(3, dummy_service01.test_getServiceCalls());
 }
@@ -182,7 +182,7 @@ TEST(tg_service, tc_service_sync10ms_executePeriodically) {
     ret_init = cut_service->init_scheduleSync10ms(15);
 
     // exp.1: check called 1, 2, ... , 13 times in timerange of 10 ms
-    while(cut_service->run_scheduleSync10ms == true);
+    while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
 
     for(int i=1; i<=13; i++) {
@@ -217,7 +217,7 @@ TEST(tg_service, tc_service_sync10ms_abort) {
     ret_cancel = cut_service->cancel_scheduleSync10ms();
 
     // exp.2: check service is called and canceled
-    while(cut_service->run_scheduleSync10ms == true);
+    while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_cancel);
     CHECK_EQUAL(10, dummy_service01.test_getServiceCalls());
 }
@@ -242,22 +242,69 @@ TEST(tg_service, tc_service_sync10ms_oneInput) {
     CHECK_EQUAL(false, dummy_service01.data.GPIO_05);
 
     // a.1: call init function for execution of service
-    // printf("<<<< TEST >>>>>\n");
-    // printf("%p ; %p ; %p\n", (void *)spy_driver, (void *)cut_service->ptr_driver, (void *)cut_service);
-    // cut_service->ptr_driver = spy_driver;
-    // printf("%p ; %p\n", (void *)spy_driver, (void *)cut_service->ptr_driver);
-    // printf("%d\n", spy_driver->gpioRead(05));
-    // printf("%d\n", cut_service->ptr_driver->gpioRead(05));
     ret_init = cut_service->init_scheduleSync10ms(1);
 
     // exp.1: check value is successfully read
-    while(cut_service->run_scheduleSync10ms == true);
+    while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
     CHECK_EQUAL(true, dummy_service01.data.GPIO_05);
 }
-
-
 TEST(tg_service, tc_service_sync10ms_oneOutput) {
+    // init local variables
+    bool ret_init = false;
+
+    // preconditions
+    dummy_service01.data.GPIO_12 = true;
+
+    // exp.0: check initialization state
+    CHECK_EQUAL(false, spy_driver->test_getWriteValue(12));
+
+    // a.1: call init function for execution of service
+    ret_init = cut_service->init_scheduleSync10ms(1);
+
+    // exp.1: check value is successfully written
+    while(cut_service->status_scheduleSync10ms() == true);
+    CHECK_EQUAL(true, ret_init);
+    CHECK_EQUAL(true, spy_driver->test_getWriteValue(12));
 }
 TEST(tg_service, tc_service_sync10ms_allGPIOs) {
+    // init local variables
+    bool ret_init = false;
+
+    // preconditions
+    spy_driver->test_setReadValue(05, true);
+    spy_driver->test_setReadValue(06, true);
+    spy_driver->test_setReadValue(13, true);
+    spy_driver->test_setReadValue(26, true);
+
+    // exp.0: check initialization state
+    CHECK_EQUAL(false, dummy_service01.data.GPIO_05);
+    CHECK_EQUAL(false, dummy_service01.data.GPIO_06);
+    CHECK_EQUAL(false, dummy_service01.data.GPIO_13);
+    CHECK_EQUAL(false, dummy_service01.data.GPIO_26);
+
+    // a.1: call init function for execution of service
+    ret_init = cut_service->init_scheduleSync10ms(1);
+
+    // exp.1: check values are successfully read
+    while(cut_service->status_scheduleSync10ms() == true);
+    CHECK_EQUAL(true, ret_init);
+    CHECK_EQUAL(true, dummy_service01.data.GPIO_05);
+    CHECK_EQUAL(true, dummy_service01.data.GPIO_06);
+    CHECK_EQUAL(true, dummy_service01.data.GPIO_13);
+    CHECK_EQUAL(true, dummy_service01.data.GPIO_26);
+
+    // a.2: reset driver
+    spy_driver->test_reset();
+
+    // exp.2: check reset state
+    CHECK_EQUAL(false, spy_driver->test_getWriteValue(12));
+
+    // a.3: call init function again
+    ret_init = cut_service->init_scheduleSync10ms(1);
+
+    // exp.3: check values are successfully written
+    while(cut_service->status_scheduleSync10ms() == true);
+    CHECK_EQUAL(true, ret_init);
+    CHECK_EQUAL(true, spy_driver->test_getWriteValue(12));
 }
