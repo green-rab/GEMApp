@@ -17,6 +17,7 @@ using namespace std;
 
 #include "../include/service.h"
 #include "../include/global.h"
+#include "../include/gema.h"
 
 #include "spy/spy_driver.h"
 #include "spy/spy_utilsOutput.h"
@@ -230,6 +231,9 @@ TEST(tg_service, tc_service_sync10ms_abort) {
     - TEST tc_service_sync10ms_oneInput(..)
     - TEST tc_service_sync10ms_oneOutput(..)
     - TEST tc_service_sync10ms_allGPIOs(..)
+    - TEST tc_service_sync10ms_defineGpios(..)
+    - TEST tc_service_sync10ms_useInputOnlyIfDefined(..)
+    - TEST tc_service_sync10ms_useOutputOnlyIfDefined(..)
 **/
 TEST(tg_service, tc_service_sync10ms_oneInput) {
     // init local variables
@@ -307,4 +311,70 @@ TEST(tg_service, tc_service_sync10ms_allGPIOs) {
     while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
     CHECK_EQUAL(true, spy_driver->test_getWriteValue(12));
+}
+TEST(tg_service, tc_service_sync10ms_defineGpios) {
+    // init local variables
+    bool ret_init    = false;
+    int  cnt_inputs  = 0;
+    int  cnt_outputs = 0;
+
+    // preconditions
+
+    // a.1: -
+    // ...
+
+    // exp.1: check inputs and outputs are filled
+    CHECK_EQUAL(false, execute_sync10ms_INPUTS.empty());
+    CHECK_EQUAL(false, execute_sync10ms_OUTPUTS.empty());
+
+    // a.2: call init function
+    cnt_inputs  = execute_sync10ms_INPUTS.size();
+    cnt_outputs = execute_sync10ms_OUTPUTS.size();
+    ret_init = cut_service->init_scheduleSync10ms(3);
+
+    // exp.2: check size of vector is same as at startup
+    while(cut_service->status_scheduleSync10ms() == true);
+    CHECK_EQUAL(true, ret_init);
+    CHECK_EQUAL(cnt_inputs,  execute_sync10ms_INPUTS.size());
+    CHECK_EQUAL(cnt_outputs, execute_sync10ms_OUTPUTS.size());
+}
+TEST(tg_service, tc_service_sync10ms_useInputOnlyIfDefined) {
+    // init local variables
+    bool ret_init = false;
+
+    // preconditions
+    std::vector<e_GEMA_resGpio>().swap(execute_sync10ms_INPUTS);
+    execute_sync10ms_INPUTS.push_back(GPIO_05);
+    spy_driver->test_setReadValue(05, true);
+    spy_driver->test_setReadValue(06, true);
+
+    // exp.0: check initialization state
+    CHECK_EQUAL(false, dummy_service01.data.GPIO_05);
+    CHECK_EQUAL(false, dummy_service01.data.GPIO_06);
+
+    // a.1: call init function for execution of service
+    ret_init = cut_service->init_scheduleSync10ms(1);
+
+    // exp.1: check only one specified input is read
+    while(cut_service->status_scheduleSync10ms() == true);
+    CHECK_EQUAL(true, ret_init);
+    CHECK_EQUAL(true, dummy_service01.data.GPIO_05);
+    CHECK_EQUAL(false, dummy_service01.data.GPIO_06);
+
+    // a.2: call init function again with second input
+    dummy_service01.test_reset();
+    execute_sync10ms_INPUTS.push_back(GPIO_06);
+    ret_init = cut_service->init_scheduleSync10ms(1);
+
+    // exp.2: check both specified input is read
+    while(cut_service->status_scheduleSync10ms() == true);
+    CHECK_EQUAL(true, ret_init);
+    CHECK_EQUAL(true, dummy_service01.data.GPIO_05);
+    CHECK_EQUAL(true, dummy_service01.data.GPIO_06);
+}
+
+
+
+
+TEST(tg_service, tc_service_sync10ms_useOutputOnlyIfDefined) {
 }

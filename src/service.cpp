@@ -12,6 +12,7 @@
 
 #include <thread>
 #include <chrono>
+#include <vector>
 
 #include "../include/global.h"
 #include "../include/gema.h"
@@ -26,6 +27,9 @@ T_service::T_service(T_driver *inst_driver) {
 
     run_scheduleSync10ms = false;
     stop_scheduleSync10ms = false;
+
+    // call startup methods - fill vectors for ressources
+    execute_sync10ms_startup(); 
 }
 // bool T_service::run_scheduleSync10ms = false;  // because static
 // bool T_service::stop_scheduleSync10ms = false; // because static
@@ -38,6 +42,10 @@ T_service::~T_service() {
     cancel_scheduleSync10ms();
 
     while(T_service::run_scheduleSync10ms);
+
+    // free vector memory
+    std::vector<e_GEMA_resGpio>().swap(execute_sync10ms_INPUTS);
+    std::vector<e_GEMA_resGpio>().swap(execute_sync10ms_OUTPUTS);
 }
 
 
@@ -64,11 +72,33 @@ void T_service::task_scheduleSync10ms(uint16_t n_times) {
 
         if(stop_scheduleSync10ms == false) {
             // --> read inputs
-            data.GPIO_05 = ptr_driver->gpioRead(05);
-            data.GPIO_06 = ptr_driver->gpioRead(06);
-            // data.GPIO_12 = ptr_driver->gpioRead(12);
-            data.GPIO_13 = ptr_driver->gpioRead(13);
-            data.GPIO_26 = ptr_driver->gpioRead(26);
+            for(auto input = execute_sync10ms_INPUTS.begin(); input != execute_sync10ms_INPUTS.end(); input++) {
+                switch(*input) {
+                case GPIO_05:
+                    data.GPIO_05 = ptr_driver->gpioRead(05);
+                    break;
+                case GPIO_06:
+                    data.GPIO_06 = ptr_driver->gpioRead(06);
+                    break;
+                case GPIO_12:
+                    data.GPIO_12 = ptr_driver->gpioRead(12);
+                    break;
+                case GPIO_13:
+                    data.GPIO_13 = ptr_driver->gpioRead(13);
+                    break;
+                case GPIO_26:
+                    data.GPIO_26 = ptr_driver->gpioRead(26);
+                    break;
+
+                default:
+                    break;
+                }
+            };
+            // data.GPIO_05 = ptr_driver->gpioRead(05);
+            // data.GPIO_06 = ptr_driver->gpioRead(06);
+            // // data.GPIO_12 = ptr_driver->gpioRead(12);
+            // data.GPIO_13 = ptr_driver->gpioRead(13);
+            // data.GPIO_26 = ptr_driver->gpioRead(26);
 
             // execute user services
             execute_sync10ms(data);

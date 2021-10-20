@@ -10,6 +10,20 @@
 #ifndef GEMA_H
 #define GEMA_H
 
+#include <vector>
+
+
+/**
+    ## Enum for startup ressource definition ##
+**/
+enum e_GEMA_resGpio {
+    GPIO_05,
+    GPIO_06,
+    GPIO_12,
+    GPIO_13,
+    GPIO_26
+};
+
 
 /**
     ## Datatype ##
@@ -24,8 +38,16 @@ struct t_GEMA_data {
 
 
 /**
+    ## Global varibales ##
+**/
+extern std::vector<e_GEMA_resGpio> execute_sync10ms_INPUTS;
+extern std::vector<e_GEMA_resGpio> execute_sync10ms_OUTPUTS;
+
+
+/**
     ## Prototypes ##
 **/
+void execute_sync10ms_startup();
 void execute_sync10ms(t_GEMA_data &data);
 
 
