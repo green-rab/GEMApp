@@ -27,14 +27,6 @@ class T_service {
         // stop running (-> set to true)
         bool stop_scheduleSync10ms;
 
-        // support for scheduling
-        // auto chrono_now() { return std::chrono::steady_clock::now(); }
- 
-        // auto awake_time() {
-        //     using std::chrono::operator""ms;
-        //     return chrono_now() + 10ms;
-        // }
-
         // tasks
         void task_scheduleSync10ms(uint16_t n_times);
 

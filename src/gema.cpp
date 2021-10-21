@@ -12,7 +12,11 @@
 #include <stdlib.h>
 #include <vector>
 
-#include "../service/dummy_service01.h"
+
+/**
+    ## User header-files for classes and functions ##
+**/
+#include "../userServices/dummy_service.h"
 
 
 /**
@@ -25,13 +29,15 @@ std::vector<e_GEMA_resGpio> execute_sync10ms_OUTPUTS = {};
 /**
     ## User instances of classes and functions ##
 **/
-T_dummy_service01 dummy_service01 = T_dummy_service01();
+T_dummy_service *dummy_service; // = T_dummy_service();
 
 
 /**
     ## Execution synchronously every 10 ms ##
 **/
 void execute_sync10ms_startup() {
+    dummy_service = new T_dummy_service();
+
     execute_sync10ms_INPUTS.push_back(GPIO_05);
     execute_sync10ms_INPUTS.push_back(GPIO_06);
     execute_sync10ms_INPUTS.push_back(GPIO_13);
@@ -40,6 +46,13 @@ void execute_sync10ms_startup() {
     execute_sync10ms_OUTPUTS.push_back(GPIO_12);
 }
 
+void execute_sync10ms_shutdown() {
+    if(dummy_service != NULL) {
+        delete dummy_service;
+    }
+    dummy_service = NULL;
+}
+
 void execute_sync10ms(t_GEMA_data &data) {
-    dummy_service01.execute(data);
+    dummy_service->execute(data);
 }

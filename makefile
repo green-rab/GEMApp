@@ -1,12 +1,12 @@
 CXX       := g++
 CXX_FLAGS := -std=c++17 -ggdb
 
-BIN     := bin
-SRC     := src
-TST		:= test
-TST_SPY := test/spy
-SERVICE := service
-INCLUDE := include
+BIN      := bin
+SRC      := src
+TST		 := test
+TST_SPY  := test/spy
+SERVICES := userServices
+INCLUDE  := include
 
 LIBRARIES   :=
 EXECUTABLE  := gema
@@ -22,7 +22,7 @@ all: $(BIN)/$(EXECUTABLE)
 
 run: clean all clear ./$(BIN)/$(EXECUTABLE)
 
-$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp $(TST)/*.cpp $(TST_SPY)/*.cpp $(SERVICE)/*.cpp
+$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp $(TST)/*.cpp $(TST_SPY)/*.cpp $(SERVICES)/*.cpp
 		$(CXX) $(CXX_FLAGS) -I$(INCLUDE) $^ -o $@ $(LIBRARIES)
 
 clean:

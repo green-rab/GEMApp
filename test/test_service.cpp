@@ -19,16 +19,17 @@ using namespace std;
 #include "../include/global.h"
 #include "../include/gema.h"
 
-#include "spy/spy_driver.h"
-#include "spy/spy_utilsOutput.h"
+#include "../userServices/dummy_service.h"
 
-#include "../service/dummy_service01.h"
+#include "spy/spy_driver.h"
+#include "spy/spy_userService.h"
+#include "spy/spy_utilsOutput.h"
 
 
 /**
-    ## Use dummy-services as spy for tests ##
+    ## Extern global variables ##
 **/
-extern T_dummy_service01 dummy_service01;
+extern T_dummy_service *dummy_service;
 
 
 /**
@@ -40,22 +41,23 @@ TEST_GROUP(tg_service) {
 
     // SPYs
     T_spy_driver      *spy_driver;
+    T_spy_userService *spy_userService;
     T_spy_utilsOutput *spy_utilsOutput;
 
     void setup() {
         // init SPYs
         spy_driver      = new T_spy_driver();
+        spy_userService = new T_spy_userService();
         spy_utilsOutput = new T_spy_utilsOutput(1000);
 
         // init STUBs
-
-        // reset DUMMYs
-        dummy_service01.test_reset();
     
         // init CUT
         cut_service = new T_service(spy_driver);
 
         // set function pointers
+        UT_PTR_SET(dummy_service, spy_userService);
+        // dummy_service = spy_userService;
         UT_PTR_SET(callPrintf, spy_utilsOutput->printf);
     }
 
@@ -65,6 +67,9 @@ TEST_GROUP(tg_service) {
 
         delete spy_driver;
         spy_driver = NULL;
+
+        delete spy_userService;
+        spy_userService = NULL;
 
         delete spy_utilsOutput;
         spy_utilsOutput = NULL;
@@ -142,7 +147,7 @@ TEST(tg_service, tc_service_sync10ms_executeOnce) {
     // preconditions
 
     // exp.0: check initialization state
-    CHECK_EQUAL(0, dummy_service01.test_getServiceCalls());
+    CHECK_EQUAL(0, spy_userService->test_getServiceCalls());
 
     // a.1: call init function
     ret_init = cut_service->init_scheduleSync10ms();
@@ -150,7 +155,7 @@ TEST(tg_service, tc_service_sync10ms_executeOnce) {
     // exp.1: check return and service is called
     while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
-    CHECK_EQUAL(1, dummy_service01.test_getServiceCalls());
+    CHECK_EQUAL(1, spy_userService->test_getServiceCalls());
 }
 TEST(tg_service, tc_service_sync10ms_execute3times) {
     // init local variables
@@ -159,7 +164,7 @@ TEST(tg_service, tc_service_sync10ms_execute3times) {
     // preconditions
 
     // exp.0: check initialization state
-    CHECK_EQUAL(0, dummy_service01.test_getServiceCalls());
+    CHECK_EQUAL(0, spy_userService->test_getServiceCalls());
 
     // a.1: call init function
     ret_init = cut_service->init_scheduleSync10ms(3);
@@ -167,7 +172,7 @@ TEST(tg_service, tc_service_sync10ms_execute3times) {
     // exp.1: check return and service is called
     while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
-    CHECK_EQUAL(3, dummy_service01.test_getServiceCalls());
+    CHECK_EQUAL(3, spy_userService->test_getServiceCalls());
 }
 TEST(tg_service, tc_service_sync10ms_executePeriodically) {
     // init local variables
@@ -190,7 +195,7 @@ TEST(tg_service, tc_service_sync10ms_executePeriodically) {
         set_minValue = float(i) * 0.01 - 0.003;
         set_maxValue = float(i) * 0.01 + 0.003;
 
-        ret_timestamp = dummy_service01.test_getServiceTimestamp(i);
+        ret_timestamp = spy_userService->test_getServiceTimestamp(i);
 
         ret_inRange = inTolerance(set_minValue, set_maxValue, ret_timestamp);
         if(!ret_inRange) {
@@ -214,13 +219,13 @@ TEST(tg_service, tc_service_sync10ms_abort) {
     CHECK_EQUAL(true, ret_init);
 
     // a.2: call cancel function at 10rd service call
-    while(dummy_service01.test_getServiceCalls() < 10);
+    while(spy_userService->test_getServiceCalls() < 10);
     ret_cancel = cut_service->cancel_scheduleSync10ms();
 
     // exp.2: check service is called and canceled
     while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_cancel);
-    CHECK_EQUAL(10, dummy_service01.test_getServiceCalls());
+    CHECK_EQUAL(10, spy_userService->test_getServiceCalls());
 }
 
 
@@ -243,7 +248,7 @@ TEST(tg_service, tc_service_sync10ms_oneInput) {
     spy_driver->test_setReadValue(05, true);
 
     // exp.0: check initialization state
-    CHECK_EQUAL(false, dummy_service01.dataRead.GPIO_05);
+    CHECK_EQUAL(false, spy_userService->dataRead.GPIO_05);
 
     // a.1: call init function for execution of service
     ret_init = cut_service->init_scheduleSync10ms(1);
@@ -251,14 +256,14 @@ TEST(tg_service, tc_service_sync10ms_oneInput) {
     // exp.1: check value is successfully read
     while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
-    CHECK_EQUAL(true, dummy_service01.dataRead.GPIO_05);
+    CHECK_EQUAL(true, spy_userService->dataRead.GPIO_05);
 }
 TEST(tg_service, tc_service_sync10ms_oneOutput) {
     // init local variables
     bool ret_init = false;
 
     // preconditions
-    dummy_service01.dataWrite.GPIO_12 = true;
+    spy_userService->dataWrite.GPIO_12 = true;
 
     // exp.0: check initialization state
     CHECK_EQUAL(false, spy_driver->test_getWriteValue(12));
@@ -282,12 +287,12 @@ TEST(tg_service, tc_service_sync10ms_allGPIOs) {
     spy_driver->test_setReadValue(26, true);
 
     // exp.0: check initialization state
-    CHECK_EQUAL(false, dummy_service01.dataRead.GPIO_05);
-    CHECK_EQUAL(false, dummy_service01.dataRead.GPIO_06);
-    CHECK_EQUAL(false, dummy_service01.dataRead.GPIO_13);
-    CHECK_EQUAL(false, dummy_service01.dataRead.GPIO_26);
+    CHECK_EQUAL(false, spy_userService->dataRead.GPIO_05);
+    CHECK_EQUAL(false, spy_userService->dataRead.GPIO_06);
+    CHECK_EQUAL(false, spy_userService->dataRead.GPIO_13);
+    CHECK_EQUAL(false, spy_userService->dataRead.GPIO_26);
 
-    CHECK_EQUAL(false, dummy_service01.dataWrite.GPIO_12);
+    CHECK_EQUAL(false, spy_userService->dataWrite.GPIO_12);
 
     // a.1: call init function for execution of service
     ret_init = cut_service->init_scheduleSync10ms(1);
@@ -295,10 +300,10 @@ TEST(tg_service, tc_service_sync10ms_allGPIOs) {
     // exp.1: check values are successfully read
     while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
-    CHECK_EQUAL(true, dummy_service01.dataRead.GPIO_05);
-    CHECK_EQUAL(true, dummy_service01.dataRead.GPIO_06);
-    CHECK_EQUAL(true, dummy_service01.dataRead.GPIO_13);
-    CHECK_EQUAL(true, dummy_service01.dataRead.GPIO_26);
+    CHECK_EQUAL(true, spy_userService->dataRead.GPIO_05);
+    CHECK_EQUAL(true, spy_userService->dataRead.GPIO_06);
+    CHECK_EQUAL(true, spy_userService->dataRead.GPIO_13);
+    CHECK_EQUAL(true, spy_userService->dataRead.GPIO_26);
 
     // a.2: reset driver
     spy_driver->test_reset();
@@ -307,7 +312,7 @@ TEST(tg_service, tc_service_sync10ms_allGPIOs) {
     CHECK_EQUAL(false, spy_driver->test_getWriteValue(12));
 
     // a.3: call init function again
-    dummy_service01.dataWrite.GPIO_12 = true;
+    spy_userService->dataWrite.GPIO_12 = true;
     ret_init = cut_service->init_scheduleSync10ms(1);
 
     // exp.3: check values are successfully written
@@ -352,8 +357,8 @@ TEST(tg_service, tc_service_sync10ms_useInputOnlyIfDefined) {
     spy_driver->test_setReadValue(06, true);
 
     // exp.0: check initialization state
-    CHECK_EQUAL(false, dummy_service01.dataRead.GPIO_05);
-    CHECK_EQUAL(false, dummy_service01.dataRead.GPIO_06);
+    CHECK_EQUAL(false, spy_userService->dataRead.GPIO_05);
+    CHECK_EQUAL(false, spy_userService->dataRead.GPIO_06);
 
     // a.1: call init function for execution of service
     ret_init = cut_service->init_scheduleSync10ms(1);
@@ -361,19 +366,19 @@ TEST(tg_service, tc_service_sync10ms_useInputOnlyIfDefined) {
     // exp.1: check only one specified input is read
     while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
-    CHECK_EQUAL(true, dummy_service01.dataRead.GPIO_05);
-    CHECK_EQUAL(false, dummy_service01.dataRead.GPIO_06);
+    CHECK_EQUAL(true, spy_userService->dataRead.GPIO_05);
+    CHECK_EQUAL(false, spy_userService->dataRead.GPIO_06);
 
     // a.2: call init function again with second input
-    dummy_service01.test_reset();
+    spy_userService->test_reset();
     execute_sync10ms_INPUTS.push_back(GPIO_06);
     ret_init = cut_service->init_scheduleSync10ms(1);
 
     // exp.2: check both specified inputs are read
     while(cut_service->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
-    CHECK_EQUAL(true, dummy_service01.dataRead.GPIO_05);
-    CHECK_EQUAL(true, dummy_service01.dataRead.GPIO_06);
+    CHECK_EQUAL(true, spy_userService->dataRead.GPIO_05);
+    CHECK_EQUAL(true, spy_userService->dataRead.GPIO_06);
 }
 TEST(tg_service, tc_service_sync10ms_useOutputOnlyIfDefined) {
     // init local variables
@@ -382,8 +387,8 @@ TEST(tg_service, tc_service_sync10ms_useOutputOnlyIfDefined) {
     // preconditions
     std::vector<e_GEMA_resGpio>().swap(execute_sync10ms_OUTPUTS);
     execute_sync10ms_OUTPUTS.push_back(GPIO_12);
-    dummy_service01.dataWrite.GPIO_12 = true;
-    dummy_service01.dataWrite.GPIO_13 = true;
+    spy_userService->dataWrite.GPIO_12 = true;
+    spy_userService->dataWrite.GPIO_13 = true;
 
     // exp.0: check initialization state
     CHECK_EQUAL(false, spy_driver->test_getWriteValue(12));
@@ -399,10 +404,10 @@ TEST(tg_service, tc_service_sync10ms_useOutputOnlyIfDefined) {
     CHECK_EQUAL(false, spy_driver->test_getWriteValue(13));
 
     // a.2: call init function again with second output
-    dummy_service01.test_reset();
+    spy_userService->test_reset();
     execute_sync10ms_OUTPUTS.push_back(GPIO_13);
-    dummy_service01.dataWrite.GPIO_12 = true;
-    dummy_service01.dataWrite.GPIO_13 = true;
+    spy_userService->dataWrite.GPIO_12 = true;
+    spy_userService->dataWrite.GPIO_13 = true;
     ret_init = cut_service->init_scheduleSync10ms(1);
 
     // exp.2: check both specified outputs are written

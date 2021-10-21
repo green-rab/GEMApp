@@ -1,16 +1,17 @@
 /**
  * # GEMA - Generic Embedded Main Application #
  * 
- * - file: dummy_service01.h
+ * - file: spy_userService.h
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 19.09.2021
  **/
 
-#ifndef DUMMY_SERVICE_01_H
-#define DUMMY_SERVICE_01_H
+#ifndef SPY_USERSERVICE_01_H
+#define SPY_USERSERVICE_01_H
 
-#include "../include/gema.h"
+#include "../../userServices/dummy_service.h"
+#include "../../include/gema.h"
 
 #include <chrono>
 
@@ -19,9 +20,9 @@
 
 
 /**
-    ## CLASS T_dummy_service01(..) - Dummy service 01 for development ##
+    ## CLASS T_spy_userService(..) - SPY for T_dummy_service ##
 **/
-class T_dummy_service01 {
+class T_spy_userService : public T_dummy_service {
     private:
         int test_serviceCalls;
 
@@ -29,8 +30,8 @@ class T_dummy_service01 {
         double test_timestamps[TEST_TIME_SAMPLES];
 
     public:
-        T_dummy_service01();
-        ~T_dummy_service01();
+        T_spy_userService();
+        ~T_spy_userService();
 
         // calls
         void execute(t_GEMA_data &ndata);

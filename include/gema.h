@@ -48,6 +48,7 @@ extern std::vector<e_GEMA_resGpio> execute_sync10ms_OUTPUTS;
     ## Prototypes ##
 **/
 void execute_sync10ms_startup();
+void execute_sync10ms_shutdown();
 void execute_sync10ms(t_GEMA_data &data);
 
 

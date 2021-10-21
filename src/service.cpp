@@ -28,7 +28,7 @@ T_service::T_service(T_driver *inst_driver) {
     run_scheduleSync10ms = false;
     stop_scheduleSync10ms = false;
 
-    // call startup methods - fill vectors for ressources
+    // call startup methods - fill vectors for ressources and initialize instances
     execute_sync10ms_startup(); 
 }
 // bool T_service::run_scheduleSync10ms = false;  // because static
@@ -41,7 +41,11 @@ T_service::T_service(T_driver *inst_driver) {
 T_service::~T_service() {
     cancel_scheduleSync10ms();
 
+    // wait for all schedulers are finished
     while(T_service::run_scheduleSync10ms);
+
+    // call shutdown method - free initialized instances
+    execute_sync10ms_shutdown();
 
     // free vector memory
     std::vector<e_GEMA_resGpio>().swap(execute_sync10ms_INPUTS);
@@ -167,7 +171,7 @@ bool T_service::cancel_scheduleSync10ms() {
     ## T_service :: init_scheduleSync100ms() - Initialize sync 100 ms ##
 **/
 bool T_service::init_scheduleSync100ms() {
-    callPrintf("Schedule sync 100 ms initialization.. successful\n");
+    callPrintf("Schedule sync 100 ms initialization.. NOT IMPLEMENTED\n");
 
     return true;
 }
