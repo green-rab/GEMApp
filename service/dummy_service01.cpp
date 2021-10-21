@@ -9,20 +9,12 @@
 
 #include "dummy_service01.h"
 
-#include <stdio.h>
-
 
 /**
     ## T_dummy_service01 :: Constructor ##
 **/
 T_dummy_service01::T_dummy_service01() {
-    test_serviceCalls = 0;
-
-    data.GPIO_05 = false;
-    data.GPIO_06 = false;
-    data.GPIO_12 = false;
-    data.GPIO_13 = false;
-    data.GPIO_26 = false;
+    test_reset();
 }
 
 
@@ -36,7 +28,7 @@ T_dummy_service01::~T_dummy_service01() {
 /**
     ## T_dummy_service01 :: execute() - Run the service ##
 **/
-void T_dummy_service01::execute(t_GEMA_data &newData) {
+void T_dummy_service01::execute(t_GEMA_data &data) {
     if(test_serviceCalls == 0) {
         test_timeStart = std::chrono::steady_clock::now();
     }
@@ -46,7 +38,8 @@ void T_dummy_service01::execute(t_GEMA_data &newData) {
 
     test_serviceCalls++;
 
-    data = newData;
+    dataRead = data;
+    data = dataWrite;
 
     // printf("i: %d ; data: %d ; newData: %d\n", test_serviceCalls, data.GPIO_05, newData.GPIO_05);
 }
@@ -57,6 +50,9 @@ void T_dummy_service01::execute(t_GEMA_data &newData) {
 **/
 void T_dummy_service01::test_reset() {
     test_serviceCalls = 0;
+
+    dataRead  = {};
+    dataWrite = {};
 }
 
 

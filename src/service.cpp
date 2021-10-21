@@ -59,7 +59,7 @@ void T_service::task_scheduleSync10ms(uint16_t n_times) {
 
     // local variables
     uint16_t count = 0;
-    t_GEMA_data data;
+    t_GEMA_data data = {};
 
     auto timeStart = std::chrono::steady_clock::now();
     auto timeWait = std::chrono::milliseconds(10);
@@ -94,21 +94,33 @@ void T_service::task_scheduleSync10ms(uint16_t n_times) {
                     break;
                 }
             };
-            // data.GPIO_05 = ptr_driver->gpioRead(05);
-            // data.GPIO_06 = ptr_driver->gpioRead(06);
-            // // data.GPIO_12 = ptr_driver->gpioRead(12);
-            // data.GPIO_13 = ptr_driver->gpioRead(13);
-            // data.GPIO_26 = ptr_driver->gpioRead(26);
 
             // execute user services
             execute_sync10ms(data);
 
             // <-- write back outputs
-            // ptr_driver->gpioWrite(05, data.GPIO_05);
-            // ptr_driver->gpioWrite(06, data.GPIO_06);
-            ptr_driver->gpioWrite(12, data.GPIO_12);
-            // ptr_driver->gpioWrite(13, data.GPIO_13);
-            // ptr_driver->gpioWrite(26, data.GPIO_26);
+            for(auto output = execute_sync10ms_OUTPUTS.begin(); output != execute_sync10ms_OUTPUTS.end(); output++) {
+                switch(*output) {
+                case GPIO_05:
+                    ptr_driver->gpioWrite(05, data.GPIO_05);
+                    break;
+                case GPIO_06:
+                    ptr_driver->gpioWrite(06, data.GPIO_06);
+                    break;
+                case GPIO_12:
+                    ptr_driver->gpioWrite(12, data.GPIO_12);
+                    break;
+                case GPIO_13:
+                    ptr_driver->gpioWrite(13, data.GPIO_13);
+                    break;
+                case GPIO_26:
+                    ptr_driver->gpioWrite(26, data.GPIO_26);
+                    break;
+
+                default:
+                    break;
+                }
+            };
         }
 
         if(n_times != 0) count++;

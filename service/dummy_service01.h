@@ -33,10 +33,11 @@ class T_dummy_service01 {
         ~T_dummy_service01();
 
         // calls
-        void execute(t_GEMA_data &newData);
+        void execute(t_GEMA_data &ndata);
 
         // only for test-cases
-        t_GEMA_data data;
+        t_GEMA_data dataRead;
+        t_GEMA_data dataWrite;
         void test_reset();
         int test_getServiceCalls();
         double test_getServiceTimestamp(int sample);
