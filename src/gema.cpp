@@ -14,12 +14,6 @@
 
 
 /**
-    ## User header-files for classes and functions ##
-**/
-#include "../userServices/dummy_service.h"
-
-
-/**
     ## PLEASE DO NOT CHANGE - Global variables for ressource definition ##
 **/
 std::vector<e_GEMA_resGpio> execute_sync10ms_INPUTS  = {};
@@ -27,9 +21,15 @@ std::vector<e_GEMA_resGpio> execute_sync10ms_OUTPUTS = {};
 
 
 /**
+    ## User header-files for classes and functions ##
+**/
+#include "../userServices/dummy_service.h"
+
+
+/**
     ## User instances of classes and functions ##
 **/
-T_dummy_service *dummy_service; // = T_dummy_service();
+T_dummy_service *dummy_service;
 
 
 /**
