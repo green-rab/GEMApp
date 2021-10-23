@@ -44,6 +44,9 @@ TEST_GROUP(tg_service) {
     T_spy_userService *spy_userService;
     T_spy_utilsOutput *spy_utilsOutput;
 
+    // Save original pointers
+    T_dummy_service   *dummy_service_ORG;
+
     void setup() {
         // init SPYs
         spy_driver      = new T_spy_driver();
@@ -56,14 +59,14 @@ TEST_GROUP(tg_service) {
         cut_service = new T_service(spy_driver);
 
         // set function pointers
-        // UT_PTR_SET(dummy_service, spy_userService);
-        delete dummy_service;
-        dummy_service = spy_userService;
+        dummy_service_ORG = dummy_service;
+        dummy_service     = spy_userService;
+
         UT_PTR_SET(callPrintf, spy_utilsOutput->printf);
     }
 
     void teardown() {
-        dummy_service   = NULL;
+        dummy_service = dummy_service_ORG;
 
         delete cut_service;
         cut_service = NULL;

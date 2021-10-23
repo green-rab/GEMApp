@@ -14,6 +14,7 @@
 #include "../include/driver_enum.h"
 #include "../include/global.h"
 
+#include "spy/spy_driver.h"
 #include "spy/spy_utilsOutput.h"
 
 extern T_enum_driverState driverState;
@@ -23,22 +24,36 @@ extern T_enum_driverState driverState;
     ## TESTGROUP tg_main(..) - Test-group (tg) for 'main' including following testcases (tc) ##
 **/
 TEST_GROUP(tg_main) {
+    // CUT code-under-test
+    // T_service *cut_main;
+
     // SPYs
+    T_spy_driver      *spy_driver;
     T_spy_utilsOutput *spy_utilsOutput;
 
     void setup() {
         // init SPYs
-        spy_utilsOutput = new T_spy_utilsOutput(100);
+        spy_driver      = new T_spy_driver();
+        spy_utilsOutput = new T_spy_utilsOutput(1000);
 
+        // init STUBs
+    
         // init CUT
-        // ...
+        // ... tbd cut_service = new T_service(spy_driver);
 
         // set function pointers
         UT_PTR_SET(callPrintf, spy_utilsOutput->printf);
     }
 
     void teardown() {
+        // delete cut_service;
+        // cut_service = NULL;
+
+        delete spy_driver;
+        spy_driver = NULL;
+
         delete spy_utilsOutput;
+        spy_utilsOutput = NULL;
 
         // mock().clear();
     }
@@ -46,16 +61,16 @@ TEST_GROUP(tg_main) {
 
 
 /**
-    ## TEST tc_main_compile(..) - Check compile succesful ##
+    Check compiling works a welcome message is printed if application is started.
+
+    - TEST tc_main_compile(..)
+    - TEST tc_main_utilsOutputPrintf(..)
+    - TEST tc_main_infotext(..)
+
 **/
 TEST(tg_main, tc_main_compile) {
     CHECK("Failed to compile");
 }
-
-/**
-    Test of general used spys that are included in the following test-cases.
-    - TEST tc_main_utilsOutputPrintf(..)
-**/
 TEST(tg_main, tc_main_utilsOutputPrintf) {
     // init local variables
 
@@ -68,11 +83,6 @@ TEST(tg_main, tc_main_utilsOutputPrintf) {
     // exp.1: check text is read by spy
     STRCMP_EQUAL("Hello World\n", spy_utilsOutput->getBuffer());
 }
-
-
-/**
-    ## TEST tc_main_infotext(..) - Check output infotext ##
-**/
 TEST(tg_main, tc_main_infotext) {
     const char exp_text[] = "GEMA - Generic Embedded Main Application, version 0.0.1\n";
 
