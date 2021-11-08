@@ -29,7 +29,7 @@ T_service::T_service(T_driver *inst_driver) {
     stop_scheduleSync10ms = false;
 
     // call startup methods - fill vectors for ressources and initialize instances
-    execute_sync10ms_startup(); 
+    execute_sync10ms_startup();
 }
 // bool T_service::run_scheduleSync10ms = false;  // because static
 // bool T_service::stop_scheduleSync10ms = false; // because static

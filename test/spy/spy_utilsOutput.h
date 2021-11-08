@@ -32,6 +32,7 @@ class T_spy_utilsOutput {
         static int system(const char * command);
 
         const char* getBuffer();
+        bool checkBuffer(const char * text);
 };
 
 

@@ -46,7 +46,7 @@ void T_spy_userService::execute(t_GEMA_data &data) {
 
 
 /**
-    ## T_spy_userService :: test_reset(..) - For test only: Reset dummy to init values ##
+    ## T_spy_userService :: test_reset() - For test only: Reset dummy to init values ##
 **/
 void T_spy_userService::test_reset() {
     test_serviceCalls = 0;
@@ -57,7 +57,7 @@ void T_spy_userService::test_reset() {
 
 
 /**
-    ## T_spy_userService :: test_getServiceCalls(..) - For test only: Return count of calls ##
+    ## T_spy_userService :: test_getServiceCalls() - For test only: Return count of calls ##
 **/
 int T_spy_userService::test_getServiceCalls() {
     return test_serviceCalls;
