@@ -1,55 +1,39 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
- * - file: res_gpio.cpp
+ * - file: drvGpio.cpp
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 13.08.2021
  **/
 
-#include "../include/global.h"
-#include "../include/res_gpio.h"
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
 using namespace std;
 
+#include "../../include/global.h"
+#include "../../include/unit/drvGpio.h"
+
 
 /**
-    ## T_res_gpio :: Constructor ##
+    ## T_drvGpio :: Constructor ##
 **/
-T_res_gpio::T_res_gpio() {
+T_drvGpio::T_drvGpio() {
 }
 
 
 /**
-    ## T_res_gpio :: Destructor ##
+    ## T_drvGpio :: Destructor ##
 **/
-T_res_gpio::~T_res_gpio() {
+T_drvGpio::~T_drvGpio() {
 }
 
 
 /**
-    ## T_res_gpio :: init(..) - Init one gpio as input or output ##
+    ## T_drvGpio :: init(..) - Init one gpio as input or output ##
 **/
-bool T_res_gpio::init(int num, bool asOutput) {
-    // char command[100];
-    
-    // sprintf(command, "echo %d > /sys/class/gpio/export", num);
-    // callSystem(command);
-
-    // if(isOutput == true) {
-    //     sprintf(command, "echo out > /sys/class/gpio/gpio%d/direction", num);
-    // } else {
-    //     sprintf(command, "echo in > /sys/class/gpio/gpio%d/direction", num);
-    // }
-    // callSystem(command);
-
-    // sprintf(command, "echo 0 > /sys/class/gpio/gpio%d/value", num);
-    // callSystem(command);
-
+bool T_drvGpio::init(int num, bool asOutput) {
     char path[100];
     char writeValue[100];
 
@@ -112,9 +96,9 @@ bool T_res_gpio::init(int num, bool asOutput) {
 
 
 /**
-    ## T_res_gpio :: deinit(..) - Release one gpio ##
+    ## T_drvGpio :: deinit(..) - Release one gpio ##
 **/
-bool T_res_gpio::deinit(int num) {
+bool T_drvGpio::deinit(int num) {
     char writeValue[100];
 
     ofstream fileUnexport;
@@ -142,9 +126,9 @@ bool T_res_gpio::deinit(int num) {
 
 
 /**
-    ## T_res_gpio :: getStateInit(..) - Get state of gpio is initialized or not ##
+    ## T_drvGpio :: getStateInit(..) - Get state of gpio is initialized or not ##
 **/
-bool T_res_gpio::getStateInit(int num, bool &state_init) {
+bool T_drvGpio::getStateInit(int num, bool &state_init) {
     char path[100];
 
     ifstream fileDirection;
@@ -170,9 +154,9 @@ bool T_res_gpio::getStateInit(int num, bool &state_init) {
 
 
 /**
-    ## T_res_gpio :: getStateDirection(..) - Get state of gpio is input (false) or output (true) ##
+    ## T_drvGpio :: getStateDirection(..) - Get state of gpio is input (false) or output (true) ##
 **/
-bool T_res_gpio::getStateDirection(int num, bool &state_direction) {
+bool T_drvGpio::getStateDirection(int num, bool &state_direction) {
     char path[100];
     char readvalue[100];
 
@@ -211,9 +195,9 @@ bool T_res_gpio::getStateDirection(int num, bool &state_direction) {
 
 
 /**
-    ## T_res_gpio :: read(..) - Read one gpio input ##
+    ## T_drvGpio :: read(..) - Read one gpio input ##
 **/
-bool T_res_gpio::read(int num, bool &value) {
+bool T_drvGpio::read(int num, bool &value) {
     char path[100];
     char readValue[100];
 
@@ -252,9 +236,9 @@ bool T_res_gpio::read(int num, bool &value) {
 
 
 /**
-    ## T_res_gpio :: write(..) - Write one gpio output ##
+    ## T_drvGpio :: write(..) - Write one gpio output ##
 **/
-bool T_res_gpio::write(int num, bool value) {
+bool T_drvGpio::write(int num, bool value) {
     char path[100];
 
     ofstream fileValue;

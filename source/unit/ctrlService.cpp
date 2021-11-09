@@ -1,29 +1,28 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
- * - file: service.cpp
+ * - file: ctrlService.cpp
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 18.09.2021
  **/
 
-// #include <string>
-// using namespace std;
-
 #include <thread>
 #include <chrono>
 #include <vector>
+using namespace std;
 
-#include "../include/global.h"
-#include "../include/gema.h"
-#include "../include/service.h"
+#include "../../include/gemapp.h"
+
+#include "../../include/global.h"
+#include "../../include/unit/ctrlService.h"
 
 
 /**
-    ## T_service :: Constructor ##
+    ## T_ctrlService :: Constructor ##
 **/
-T_service::T_service(T_driver *inst_driver) {
-    ptr_driver = inst_driver;
+T_ctrlService::T_ctrlService(T_ctrlDriver *inst_ctrlDriver) {
+    ptr_ctrlDriver = inst_ctrlDriver;
 
     run_scheduleSync10ms = false;
     stop_scheduleSync10ms = false;
@@ -31,47 +30,45 @@ T_service::T_service(T_driver *inst_driver) {
     // call startup methods - fill vectors for ressources and initialize instances
     execute_sync10ms_startup();
 }
-// bool T_service::run_scheduleSync10ms = false;  // because static
-// bool T_service::stop_scheduleSync10ms = false; // because static
 
 
 /**
-    ## T_service :: Destructor ##
+    ## T_ctrlService :: Destructor ##
 **/
-T_service::~T_service() {
+T_ctrlService::~T_ctrlService() {
     cancel_scheduleSync10ms();
 
     // wait for all schedulers are finished
-    while(T_service::run_scheduleSync10ms);
+    while(T_ctrlService::run_scheduleSync10ms);
 
     // call shutdown method - free initialized instances
     execute_sync10ms_shutdown();
 
     // free vector memory
-    std::vector<e_GEMA_resGpio>().swap(execute_sync10ms_INPUTS);
-    std::vector<e_GEMA_resGpio>().swap(execute_sync10ms_OUTPUTS);
+    vector<e_GEMApp_resGpio>().swap(execute_sync10ms_INPUTS);
+    vector<e_GEMApp_resGpio>().swap(execute_sync10ms_OUTPUTS);
 }
 
 
 /**
-    ## PRIVATE T_service :: task_scheduleSync10ms(..) - Task for sync 10 ms ##
+    ## PRIVATE T_ctrlService :: task_scheduleSync10ms(..) - Task for sync 10 ms ##
 **/
-void T_service::task_scheduleSync10ms(uint16_t n_times) {
+void T_ctrlService::task_scheduleSync10ms(uint16_t n_times) {
     // set state variables
     run_scheduleSync10ms = true;
     stop_scheduleSync10ms = false;
 
     // local variables
     uint16_t count = 0;
-    t_GEMA_data data = {};
+    t_GEMApp_data data = {};
 
-    auto timeStart = std::chrono::steady_clock::now();
-    auto timeWait = std::chrono::milliseconds(10);
+    auto timeStart = chrono::steady_clock::now();
+    auto timeWait = chrono::milliseconds(10);
     auto timeNext = timeStart + timeWait;
 
     // execution loop
     while(stop_scheduleSync10ms == false && (count < n_times || n_times == 0)) {
-        std::this_thread::sleep_until(timeNext);
+        this_thread::sleep_until(timeNext);
         timeNext += timeWait;
 
         if(stop_scheduleSync10ms == false) {
@@ -79,19 +76,19 @@ void T_service::task_scheduleSync10ms(uint16_t n_times) {
             for(auto input = execute_sync10ms_INPUTS.begin(); input != execute_sync10ms_INPUTS.end(); input++) {
                 switch(*input) {
                 case GPIO_05:
-                    data.GPIO_05 = ptr_driver->gpioRead(05);
+                    data.GPIO_05 = ptr_ctrlDriver->gpioRead(05);
                     break;
                 case GPIO_06:
-                    data.GPIO_06 = ptr_driver->gpioRead(06);
+                    data.GPIO_06 = ptr_ctrlDriver->gpioRead(06);
                     break;
                 case GPIO_12:
-                    data.GPIO_12 = ptr_driver->gpioRead(12);
+                    data.GPIO_12 = ptr_ctrlDriver->gpioRead(12);
                     break;
                 case GPIO_13:
-                    data.GPIO_13 = ptr_driver->gpioRead(13);
+                    data.GPIO_13 = ptr_ctrlDriver->gpioRead(13);
                     break;
                 case GPIO_26:
-                    data.GPIO_26 = ptr_driver->gpioRead(26);
+                    data.GPIO_26 = ptr_ctrlDriver->gpioRead(26);
                     break;
 
                 default:
@@ -106,19 +103,19 @@ void T_service::task_scheduleSync10ms(uint16_t n_times) {
             for(auto output = execute_sync10ms_OUTPUTS.begin(); output != execute_sync10ms_OUTPUTS.end(); output++) {
                 switch(*output) {
                 case GPIO_05:
-                    ptr_driver->gpioWrite(05, data.GPIO_05);
+                    ptr_ctrlDriver->gpioWrite(05, data.GPIO_05);
                     break;
                 case GPIO_06:
-                    ptr_driver->gpioWrite(06, data.GPIO_06);
+                    ptr_ctrlDriver->gpioWrite(06, data.GPIO_06);
                     break;
                 case GPIO_12:
-                    ptr_driver->gpioWrite(12, data.GPIO_12);
+                    ptr_ctrlDriver->gpioWrite(12, data.GPIO_12);
                     break;
                 case GPIO_13:
-                    ptr_driver->gpioWrite(13, data.GPIO_13);
+                    ptr_ctrlDriver->gpioWrite(13, data.GPIO_13);
                     break;
                 case GPIO_26:
-                    ptr_driver->gpioWrite(26, data.GPIO_26);
+                    ptr_ctrlDriver->gpioWrite(26, data.GPIO_26);
                     break;
 
                 default:
@@ -136,13 +133,13 @@ void T_service::task_scheduleSync10ms(uint16_t n_times) {
 
 
 /**
-    ## T_service :: init_scheduleSync10ms() - Initialize sync 10 ms ##
+    ## T_ctrlService :: init_scheduleSync10ms() - Initialize sync 10 ms ##
 **/
-bool T_service::init_scheduleSync10ms(uint16_t n_times) {
+bool T_ctrlService::init_scheduleSync10ms(uint16_t n_times) {
     callPrintf("Schedule sync 10 ms initialization.. successful\n");
 
     run_scheduleSync10ms = true;
-    std::thread thread_10ms(&T_service::task_scheduleSync10ms, this, n_times);
+    thread thread_10ms(&T_ctrlService::task_scheduleSync10ms, this, n_times);
     thread_10ms.detach();
 
     return true;
@@ -150,17 +147,17 @@ bool T_service::init_scheduleSync10ms(uint16_t n_times) {
 
 
 /**
-    ## T_service :: status_scheduleSync10ms() - Status of sync 10 ms is running ##
+    ## T_ctrlService :: status_scheduleSync10ms() - Status of sync 10 ms is running ##
 **/
-bool T_service::status_scheduleSync10ms() {
+bool T_ctrlService::status_scheduleSync10ms() {
     return run_scheduleSync10ms;
 }
 
 
 /**
-    ## T_service :: cancel_scheduleSync10ms() - Cancel sync 10 ms ##
+    ## T_ctrlService :: cancel_scheduleSync10ms() - Cancel sync 10 ms ##
 **/
-bool T_service::cancel_scheduleSync10ms() {
+bool T_ctrlService::cancel_scheduleSync10ms() {
     stop_scheduleSync10ms = true;
 
     return true;
@@ -168,9 +165,9 @@ bool T_service::cancel_scheduleSync10ms() {
 
 
 /**
-    ## T_service :: init_scheduleSync100ms() - Initialize sync 100 ms ##
+    ## T_ctrlService :: init_scheduleSync100ms() - Initialize sync 100 ms ##
 **/
-bool T_service::init_scheduleSync100ms() {
+bool T_ctrlService::init_scheduleSync100ms() {
     callPrintf("Schedule sync 100 ms initialization.. NOT IMPLEMENTED\n");
 
     return true;

@@ -1,16 +1,16 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
- * - file: spy_gpio.h
+ * - file: spy_drvGpio.h
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 23.08.2021
  **/
 
-#ifndef SPY_GPIO_H
-#define SPY_GPIO_H
+#ifndef SPY_DRVGPIO_H
+#define SPY_DRVGPIO_H
 
-#include "../../include/res_gpio.h"
+#include "../../include/unit/drvGpio.h"
 
 
 /**
@@ -32,17 +32,17 @@ enum T_enum_spy_gpioState {
 
 
 /**
-    ## CLASS T_spy_gpio(..) - SPY for T_gpio ##
+    ## CLASS T_spy_gpio(..) - SPY for T_drvGpio ##
 **/
-class T_spy_gpio : public T_res_gpio {
+class T_spy_drvGpio : public T_drvGpio {
     private:
         T_enum_spy_gpioState gpioState[CNT_GPIOS];
         bool gpioValue[CNT_GPIOS];
         bool gpioError[CNT_GPIOS];
 
     public:
-        T_spy_gpio();
-        ~T_spy_gpio();
+        T_spy_drvGpio();
+        ~T_spy_drvGpio();
         
         bool init(int num, bool asOutput);
         bool deinit(int num);

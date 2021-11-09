@@ -1,22 +1,23 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
- * - file: gema.h
+ * - file: gemapp.h
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 18.09.2021
  **/
 
-#ifndef GEMA_H
-#define GEMA_H
+#ifndef GEMAPP_H
+#define GEMAPP_H
 
 #include <vector>
+using namespace std;
 
 
 /**
     ## Enum for startup ressource definition ##
 **/
-enum e_GEMA_resGpio {
+enum e_GEMApp_resGpio {
     GPIO_05,
     GPIO_06,
     GPIO_12,
@@ -28,7 +29,7 @@ enum e_GEMA_resGpio {
 /**
     ## Datatype ##
 **/
-struct t_GEMA_data {
+struct t_GEMApp_data {
     bool GPIO_05;
     bool GPIO_06;
     bool GPIO_12;
@@ -40,8 +41,8 @@ struct t_GEMA_data {
 /**
     ## Global varibales ##
 **/
-extern std::vector<e_GEMA_resGpio> execute_sync10ms_INPUTS;
-extern std::vector<e_GEMA_resGpio> execute_sync10ms_OUTPUTS;
+extern vector<e_GEMApp_resGpio> execute_sync10ms_INPUTS;
+extern vector<e_GEMApp_resGpio> execute_sync10ms_OUTPUTS;
 
 
 /**
@@ -49,7 +50,7 @@ extern std::vector<e_GEMA_resGpio> execute_sync10ms_OUTPUTS;
 **/
 void execute_sync10ms_startup();
 void execute_sync10ms_shutdown();
-void execute_sync10ms(t_GEMA_data &data);
+void execute_sync10ms(t_GEMApp_data &data);
 
 
 #endif

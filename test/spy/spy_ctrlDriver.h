@@ -1,16 +1,17 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
- * - file: spy_driver.h
+ * - file: spy_ctrlDriver.h
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 07.10.2021
  **/
 
-#ifndef SPY_DRIVER_H
-#define SPY_DRIVER_H
+#ifndef SPY_CTRLDRIVER_H
+#define SPY_CTRLDRIVER_H
 
-#include "../../include/driver.h"
+#include "../../include/unit/ctrlDriver.h"
+#include "../../include/unit/drvGpio.h"
 
 
 /**
@@ -20,15 +21,15 @@
 
 
 /**
-    ## CLASS T_spy_driver(..) - SPY for T_driver ##
+    ## CLASS T_spy_ctrlDriver(..) - SPY for T_ctrlDriver ##
 **/
-class T_spy_driver : public T_driver {
+class T_spy_ctrlDriver : public T_ctrlDriver {
     private:
         bool gpioValue[CNT_GPIOS];
 
     public:
-        T_spy_driver();
-        ~T_spy_driver();
+        T_spy_ctrlDriver(T_drvGpio *inst_drvGpio);
+        ~T_spy_ctrlDriver();
 
         bool gpioRead(int num);
         bool gpioWrite(int num, bool value);

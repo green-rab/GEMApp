@@ -1,5 +1,5 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
  * - file: spy_userService.cpp
  * 
@@ -28,7 +28,7 @@ T_spy_userService::~T_spy_userService() {
 /**
     ## T_spy_userService :: execute() - Run the service ##
 **/
-void T_spy_userService::execute(t_GEMA_data &data) {
+void T_spy_userService::execute(t_GEMApp_data &data) {
     if(test_serviceCalls == 0) {
         test_timeStart = std::chrono::steady_clock::now();
     }

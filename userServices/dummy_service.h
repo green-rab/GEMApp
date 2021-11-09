@@ -1,5 +1,5 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
  * - file: dummy_service.h
  * 
@@ -10,7 +10,7 @@
 #ifndef DUMMY_SERVICE_H
 #define DUMMY_SERVICE_H
 
-#include "../include/gema.h"
+#include "../include/gemapp.h"
 
 
 /**
@@ -24,7 +24,7 @@ class T_dummy_service {
         ~T_dummy_service();
 
         // calls
-        virtual void execute(t_GEMA_data &ndata);
+        virtual void execute(t_GEMApp_data &ndata);
 };
 
 

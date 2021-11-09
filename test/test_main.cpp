@@ -1,5 +1,5 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
  * - file: test_main.cpp
  * 
@@ -10,7 +10,6 @@
 #include "CppUTest/TestHarness.h"
 // #include "CppUTestExt/MockSupport.h"
 
-#include "../include/main.h"
 #include "../include/global.h"
 
 #include "spy/spy_utilsOutput.h"
@@ -42,7 +41,7 @@ TEST_GROUP(tg_main) {
 
     void teardown() {
         delete spy_utilsOutput;
-        spy_utilsOutput = NULL;
+        spy_utilsOutput = nullptr;
 
         // mock().clear();
     }

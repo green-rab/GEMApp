@@ -1,5 +1,5 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
  * - file: dummy_service.cpp
  * 
@@ -27,5 +27,6 @@ T_dummy_service::~T_dummy_service() {
 /**
     ## T_dummy_service :: execute() - Run the service ##
 **/
-void T_dummy_service::execute(t_GEMA_data &data) {
+void T_dummy_service::execute(t_GEMApp_data &data) {
+    data.GPIO_12 = (data.GPIO_05 & data.GPIO_06) | data.GPIO_13;
 }

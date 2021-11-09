@@ -1,5 +1,5 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
  * - file: spy_userService.h
  * 
@@ -11,7 +11,7 @@
 #define SPY_USERSERVICE_01_H
 
 #include "../../userServices/dummy_service.h"
-#include "../../include/gema.h"
+#include "../../include/gemapp.h"
 
 #include <chrono>
 
@@ -34,11 +34,11 @@ class T_spy_userService : public T_dummy_service {
         ~T_spy_userService();
 
         // calls
-        void execute(t_GEMA_data &ndata);
+        void execute(t_GEMApp_data &ndata);
 
         // only for test-cases
-        t_GEMA_data dataRead;
-        t_GEMA_data dataWrite;
+        t_GEMApp_data dataRead;
+        t_GEMApp_data dataWrite;
         void test_reset();
         int test_getServiceCalls();
         double test_getServiceTimestamp(int sample);

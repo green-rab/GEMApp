@@ -1,23 +1,24 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
- * - file: gema.cpp
+ * - file: gemapp.cpp
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 18.09.2021
  **/
 
-#include "../include/gema.h"
-
 #include <stdlib.h>
 #include <vector>
+using namespace std;
+
+#include "../include/gemapp.h"
 
 
 /**
     ## PLEASE DO NOT CHANGE - Global variables for ressource definition ##
 **/
-std::vector<e_GEMA_resGpio> execute_sync10ms_INPUTS  = {};
-std::vector<e_GEMA_resGpio> execute_sync10ms_OUTPUTS = {};
+vector<e_GEMApp_resGpio> execute_sync10ms_INPUTS  = {};
+vector<e_GEMApp_resGpio> execute_sync10ms_OUTPUTS = {};
 
 
 /**
@@ -47,12 +48,12 @@ void execute_sync10ms_startup() {
 }
 
 void execute_sync10ms_shutdown() {
-    if(dummy_service != NULL) {
+    if(dummy_service) {
         delete dummy_service;
     }
-    dummy_service = NULL;
+    dummy_service = nullptr;
 }
 
-void execute_sync10ms(t_GEMA_data &data) {
+void execute_sync10ms(t_GEMApp_data &data) {
     dummy_service->execute(data);
 }

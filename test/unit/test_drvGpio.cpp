@@ -1,7 +1,7 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
- * - file: test_res_gpio.cpp
+ * - file: test_drvGpio.cpp
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 12.08.2021
@@ -13,24 +13,25 @@
 #include <sstream>
 using namespace std;
 
-#include "../include/res_gpio.h"
-#include "../include/global.h"
+#include "../../include/global.h"
+#include "../../include/unit/drvGpio.h"
 
 
 /**
-    ## TESTGROUP tg_gpio(..) - Test-group (tg) for 'gpio' including following testcases (tc) ##
+    ## TESTGROUP tg_gpio(..) - Test-group (tg) for 'driver gpio' including following testcases (tc) ##
 **/
 TEST_GROUP(tg_res_gpio) {
     // CUT code-under-test
-    T_res_gpio *cut_res_gpio;
+    T_drvGpio *cut_drvGpio;
 
     void setup() {
         // init CUT
-        cut_res_gpio = new T_res_gpio();
+        cut_drvGpio = new T_drvGpio();
     }
 
     void teardown() {
-        delete cut_res_gpio;
+        delete cut_drvGpio;
+        cut_drvGpio = nullptr;
 
         // mock().clear();
     }
@@ -53,7 +54,7 @@ TEST(tg_res_gpio, tc_res_gpio_initAsInput) {
     // preconditions
 
     // a.1: initialize gpio as input
-    ret_state = cut_res_gpio->init(test_gpio, false);
+    ret_state = cut_drvGpio->init(test_gpio, false);
 
     // exp.1: check return value
     CHECK(ret_state);
@@ -66,7 +67,7 @@ TEST(tg_res_gpio, tc_res_gpio_initAsOutput) {
     // preconditions
 
     // a.1: initialize gpio as output
-    ret_state = cut_res_gpio->init(test_gpio, true);
+    ret_state = cut_drvGpio->init(test_gpio, true);
 
     // exp.1: check return value
     CHECK(ret_state);
@@ -86,7 +87,7 @@ TEST(tg_res_gpio, tc_res_gpio_deinit) {
     // preconditions
 
     // a.1: deinitialize gpio
-    ret_state = cut_res_gpio->deinit(test_gpio);
+    ret_state = cut_drvGpio->deinit(test_gpio);
 
     // exp.1: check return value
     CHECK(ret_state);
@@ -108,7 +109,7 @@ TEST(tg_res_gpio, tc_res_gpio_getStateInit) {
     // preconditions
 
     // a.1: get state of initialization
-    ret_state = cut_res_gpio->getStateInit(test_gpio, ret_valInit);
+    ret_state = cut_drvGpio->getStateInit(test_gpio, ret_valInit);
 
     // exp.1: check state and return value
     CHECK(ret_state);
@@ -123,7 +124,7 @@ TEST(tg_res_gpio, tc_res_gpio_getStateDirection) {
     // preconditions
 
     // a.1: get state of direction
-    ret_state = cut_res_gpio->getStateDirection(test_gpio, ret_valDirection);
+    ret_state = cut_drvGpio->getStateDirection(test_gpio, ret_valDirection);
 
     // exp.1: check state and return value
     CHECK(ret_state);
@@ -145,7 +146,7 @@ TEST(tg_res_gpio, tc_res_gpio_read) {
     // preconditions
 
     // a.1: read gpio
-    ret_state = cut_res_gpio->read(test_gpio, ret_value);
+    ret_state = cut_drvGpio->read(test_gpio, ret_value);
 
     // exp.1: check return value
     CHECK(ret_state);
@@ -168,7 +169,7 @@ TEST(tg_res_gpio, tc_res_gpio_writeZero) {
     // preconditions
 
     // a.1: write gpio to '0'
-    ret_state = cut_res_gpio->write(test_gpio, test_value);
+    ret_state = cut_drvGpio->write(test_gpio, test_value);
 
     // exp.1: check return value
     CHECK(ret_state);
@@ -182,7 +183,7 @@ TEST(tg_res_gpio, tc_res_gpio_writeOne) {
     // preconditions
 
     // a.1: write gpio to '1'
-    ret_state = cut_res_gpio->write(test_gpio, test_value);
+    ret_state = cut_drvGpio->write(test_gpio, test_value);
 
     // exp.1: check return value
     CHECK(ret_state);

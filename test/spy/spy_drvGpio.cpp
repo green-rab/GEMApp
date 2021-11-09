@@ -1,34 +1,34 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
- * - file: spy_gpio.cpp
+ * - file: spy_drvGpio.cpp
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 23.08.2021
  **/
 
-#include "spy_gpio.h"
+#include "spy_drvGpio.h"
 
 
 /**
-    ## T_spy_gpio :: Constructor ##
+    ## T_spy_drvGpio :: Constructor ##
 **/
-T_spy_gpio::T_spy_gpio() {
+T_spy_drvGpio::T_spy_drvGpio() {
     test_reset();
 }
 
 
 /**
-    ## T_spy_gpio :: Destructor ##
+    ## T_spy_drvGpio :: Destructor ##
 **/
-T_spy_gpio::~T_spy_gpio() {
+T_spy_drvGpio::~T_spy_drvGpio() {
 }
 
 
 /**
-    ## T_spy_gpio :: init(..) - Initialize a single GPIO ##
+    ## T_spy_drvGpio :: init(..) - Initialize a single GPIO ##
 **/
-bool T_spy_gpio::init(int num, bool asOutput) {
+bool T_spy_drvGpio::init(int num, bool asOutput) {
     if(num >= CNT_GPIOS) {
         return false;
     }
@@ -48,9 +48,9 @@ bool T_spy_gpio::init(int num, bool asOutput) {
 
 
 /**
-    ## T_spy_gpio :: deinit(..) - Deinitialize a single GPIO ##
+    ## T_spy_drvGpio :: deinit(..) - Deinitialize a single GPIO ##
 **/
-bool T_spy_gpio::deinit(int num) {
+bool T_spy_drvGpio::deinit(int num) {
     if(num >= CNT_GPIOS) {
         return false;
     }
@@ -62,9 +62,9 @@ bool T_spy_gpio::deinit(int num) {
 
 
 /**
-    ## T_spy_gpio :: getStateInit(..) - Return the state of initialization of a single GPIO ##
+    ## T_spy_drvGpio :: getStateInit(..) - Return the state of initialization of a single GPIO ##
 **/
-bool T_spy_gpio::getStateInit(int num, bool &state_init) {
+bool T_spy_drvGpio::getStateInit(int num, bool &state_init) {
     state_init = false;
 
     if(num >= CNT_GPIOS) {
@@ -81,9 +81,9 @@ bool T_spy_gpio::getStateInit(int num, bool &state_init) {
 
 
 /**
-    ## T_spy_gpio :: getStateDirection(..) - Return the mode of a single GPIO if it is initialized ##
+    ## T_spy_drvGpio :: getStateDirection(..) - Return the mode of a single GPIO if it is initialized ##
 **/
-bool T_spy_gpio::getStateDirection(int num, bool &state_direction) {
+bool T_spy_drvGpio::getStateDirection(int num, bool &state_direction) {
     state_direction = false;
 
     if(num >= CNT_GPIOS) {
@@ -107,9 +107,9 @@ bool T_spy_gpio::getStateDirection(int num, bool &state_direction) {
 
 
 /**
-    ## T_spy_gpio :: read(..) - Read single GPIO-value ##
+    ## T_spy_drvGpio :: read(..) - Read single GPIO-value ##
 **/
-bool T_spy_gpio::read(int num, bool &value) {
+bool T_spy_drvGpio::read(int num, bool &value) {
     value = 0;
 
     if(num >= CNT_GPIOS) {
@@ -127,9 +127,9 @@ bool T_spy_gpio::read(int num, bool &value) {
 
 
 /**
-    ## T_spy_gpio :: write(..) - Write single GPIO-value ##
+    ## T_spy_drvGpio :: write(..) - Write single GPIO-value ##
 **/
-bool T_spy_gpio::write(int num, bool value) {
+bool T_spy_drvGpio::write(int num, bool value) {
     if(num >= CNT_GPIOS) {
         return false;
     }
@@ -145,9 +145,9 @@ bool T_spy_gpio::write(int num, bool value) {
 
 
 /**
-    ## T_spy_gpio :: test_reset() - For test only: reset all stored values ##
+    ## T_spy_drvGpio :: test_reset() - For test only: reset all stored values ##
 **/
-void T_spy_gpio::test_reset() {
+void T_spy_drvGpio::test_reset() {
     for(int i = 0; i<CNT_GPIOS; i++) {
         gpioState[i] = SPY_GPIO_UNUSED;
         gpioValue[i] = false;
@@ -157,9 +157,9 @@ void T_spy_gpio::test_reset() {
 
 
 /**
-    ## T_spy_gpio :: test_setError(..) - For test only: set an gpio to fail ##
+    ## T_spy_drvGpio :: test_setError(..) - For test only: set an gpio to fail ##
 **/
-void T_spy_gpio::test_setError(int num) {
+void T_spy_drvGpio::test_setError(int num) {
     if(num >= CNT_GPIOS) {
         return;
     }
@@ -169,9 +169,9 @@ void T_spy_gpio::test_setError(int num) {
 
 
 /**
-    ## T_spy_gpio :: test_setReadValue(..) - For test only: set read-value ##
+    ## T_spy_drvGpio :: test_setReadValue(..) - For test only: set read-value ##
 **/
-void T_spy_gpio::test_setReadValue(int num, bool val) {
+void T_spy_drvGpio::test_setReadValue(int num, bool val) {
     if(num >= CNT_GPIOS) {
         return;
     }
@@ -181,9 +181,9 @@ void T_spy_gpio::test_setReadValue(int num, bool val) {
 
 
 /**
-    ## T_spy_gpio :: test_getWriteValue(..) - For test only: get write-value ##
+    ## T_spy_drvGpio :: test_getWriteValue(..) - For test only: get write-value ##
 **/
-bool T_spy_gpio::test_getWriteValue(int num) {
+bool T_spy_drvGpio::test_getWriteValue(int num) {
     if(num >= CNT_GPIOS) {
         return false;
     }
@@ -193,9 +193,9 @@ bool T_spy_gpio::test_getWriteValue(int num) {
 
 
 /**
-    ## T_spy_gpio :: test_isReleased(..) - For test only: return if a gpio is released ##
+    ## T_spy_drvGpio :: test_isReleased(..) - For test only: return if a gpio is released ##
 **/
-bool T_spy_gpio::test_isReleased(int num) {
+bool T_spy_drvGpio::test_isReleased(int num) {
     if(num >= CNT_GPIOS) {
         return false;
     }

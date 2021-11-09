@@ -1,5 +1,5 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
  * - file: main.cpp
  * 
@@ -11,13 +11,11 @@
 #include "CppUTest/TestRegistry.h"
 
 #include "../include/global.h"
-#include "../include/main.h"
-
-#include "../include/esb.h"
+#include "../include/unit/esb.h"
 
 
 /**
-    ## main(..) - Entry point of GEMA ##
+    ## main(..) - Entry point of GEMApp ##
 **/
 int main(int argc, char** argv) {
     T_ESB esb = T_ESB(argc, argv);

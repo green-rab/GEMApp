@@ -1,20 +1,49 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
- * - file: driver.h
+ * - file: ctrlDriver.h
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 16.08.2021
  **/
 
-#ifndef DRIVER_H
-#define DRIVER_H
+#ifndef CTRLDRIVER_H
+#define CTRLDRIVER_H
 
-#include "driver_enum.h"
-
-#include "res_gpio.h"
+#include "drvGpio.h"
 
 #include <string>
+using namespace std;
+
+
+/**
+    ## ENUM T_enum_driverState()..) - State of driver ##
+**/
+enum T_enum_driverState {
+    INIT = 0,
+    RUN = 10,
+    ERROR = 20
+};
+
+
+/**
+    ## ENUM T_enum_configDevice(..) - Supported host-devices ##
+**/
+enum T_enum_driverDevice {
+    NONE = 0,
+
+    RASPBERRY_PI = 1
+};
+
+
+/**
+    ## ENUM T_enum_driverGpio(..) - Modes for GPIOs ##
+**/
+enum T_enum_driverGpio {
+    UNUSED = 0,
+    INPUT = 1,
+    OUTPUT = 2
+};
 
 
 /**
@@ -36,41 +65,42 @@
 
 
 /**
-    ## CLASS T_driver(..) - Driver-Layer main-file ##
+    ## CLASS T_ctrlDriver(..) - Driver-Layer main-file ##
 **/
-class T_driver {
+class T_ctrlDriver {
     private:
+        // link to hardware-ressources
+        T_drvGpio *ptr_drvGpio;
+
+        // state variables
         T_enum_driverState state;
 
         // implementation for get-functions (config.h)
-        static std::string getConfig_device_rawImpl();
-        static std::string getConfig_gpio05_rawImpl();
-        static std::string getConfig_gpio06_rawImpl();
-        static std::string getConfig_gpio12_rawImpl();
-        static std::string getConfig_gpio13_rawImpl();
-        static std::string getConfig_gpio26_rawImpl();
+        static string getConfig_device_rawImpl();
+        static string getConfig_gpio05_rawImpl();
+        static string getConfig_gpio06_rawImpl();
+        static string getConfig_gpio12_rawImpl();
+        static string getConfig_gpio13_rawImpl();
+        static string getConfig_gpio26_rawImpl();
 
         // helper functions
-        T_enum_driverGpio getGpioEnum(std::string strConfig);
+        T_enum_driverGpio getGpioEnum(string strConfig);
 
         // initialization for HW-Ressources
         bool checkConfig();
         bool initGpio();
 
     public:
-        T_driver();
-        ~T_driver();
-
-        // hardware-ressources
-        T_res_gpio *res_gpio;
+        T_ctrlDriver(T_drvGpio *inst_drvGpio);
+        ~T_ctrlDriver();
 
         // function pointers for get-functions (config.h)
-        std::string (*getConfig_device_raw)();
-        std::string (*getConfig_gpio05_raw)();
-        std::string (*getConfig_gpio06_raw)();
-        std::string (*getConfig_gpio12_raw)();
-        std::string (*getConfig_gpio13_raw)();
-        std::string (*getConfig_gpio26_raw)();
+        string (*getConfig_device_raw)();
+        string (*getConfig_gpio05_raw)();
+        string (*getConfig_gpio06_raw)();
+        string (*getConfig_gpio12_raw)();
+        string (*getConfig_gpio13_raw)();
+        string (*getConfig_gpio26_raw)();
 
         // get-functions for values from config.h
         T_enum_driverDevice getConfig_device();

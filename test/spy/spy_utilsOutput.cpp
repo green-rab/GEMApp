@@ -1,5 +1,5 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
  * - file: spy_utilsOutput.cpp
  * 
@@ -7,12 +7,12 @@
  * - Markus Schmidt, Germany, created: 22.08.2021
  **/
 
-#include "spy_utilsOutput.h"
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+
+#include "spy_utilsOutput.h"
 
 
 char * T_spy_utilsOutput::buffer = NULL;

@@ -1,5 +1,5 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
  * - file: global.h
  * 
@@ -14,9 +14,16 @@
 #include "../include/global.h"
 
 
+/**
+    ## Global function pointers ##
+**/
 int (*callPrintf)(const char * format, ...) = printf;
 int (*callSystem)(const char * command) = callSystem_Impl;
 
+
+/**
+    ## Global functions ##
+**/
 int callSystem_Impl(const char * command) {
     #ifndef TESTMODE
     return system(command);

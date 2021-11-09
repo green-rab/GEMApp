@@ -1,25 +1,25 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
- * - file: service.h
+ * - file: ctrlService.h
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 18.09.2021
  **/
 
-#ifndef SERVICE_H
-#define SERVICE_H
+#ifndef CTRLSERVICE_H
+#define CTRLSERVICE_H
 
-#include "driver.h"
+#include "ctrlDriver.h"
 
 
 /**
-    ## CLASS T_service(..) - Service-Layer main-file ##
+    ## CLASS T_ctrlService(..) - Service-Layer main-file ##
 **/
-class T_service {
+class T_ctrlService {
     private:
         // link to driver-layer
-        T_driver *ptr_driver;
+        T_ctrlDriver *ptr_ctrlDriver;
 
         // status running (= true)
         bool run_scheduleSync10ms;
@@ -31,8 +31,8 @@ class T_service {
         void task_scheduleSync10ms(uint16_t n_times);
 
     public:
-        T_service(T_driver *inst_driver);
-        ~T_service();
+        T_ctrlService(T_ctrlDriver *inst_ctrlDriver);
+        ~T_ctrlService();
 
         // initialization
         bool init_scheduleSync10ms(uint16_t n_times = 1);

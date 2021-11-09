@@ -1,5 +1,5 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
  * - file: test_esb.cpp
  * 
@@ -14,12 +14,11 @@
 #include <sstream>
 using namespace std;
 
-#include "../include/esb.h"
-#include "../include/global.h"
+#include "../../include/global.h"
+#include "../../include/unit/ctrlDriver.h"
+#include "../../include/unit/esb.h"
 
-#include "../include/driver_enum.h"
-
-#include "spy/spy_utilsOutput.h"
+#include "../spy/spy_utilsOutput.h"
 
 
 /**
@@ -48,10 +47,10 @@ TEST_GROUP(tg_esb) {
 
     void teardown() {
         delete cut_esb;
-        cut_esb = NULL;
+        cut_esb = nullptr;
 
         delete spy_utilsOutput;
-        spy_utilsOutput = NULL;
+        spy_utilsOutput = nullptr;
 
         // mock().clear();
     }
@@ -108,34 +107,31 @@ TEST(tg_esb, tc_esb_msgGoodbye) {
     - TEST tc_esb_initDriver(..)
     - TEST tc_esb_initService(..)
 **/
-/**
-    ## TEST tc_main_driverInitialized(..) - Check driver-layer is initialized successfully ##
-**/
 TEST(tg_esb, tc_esb_initDriver) {
     // init local variables
     int ret_run = -1;
 
     // preconditions
-    CHECK_EQUAL(false, cut_esb->getState_driver());
+    CHECK_EQUAL(false, cut_esb->getState_ctrlDriver());
 
     // a.1: call run for initialization
     ret_run = cut_esb->run();
 
     // exp.1: check driver state
     CHECK_EQUAL(0, ret_run);
-    CHECK_EQUAL(true, cut_esb->getState_driver());
+    CHECK_EQUAL(true, cut_esb->getState_ctrlDriver());
 }
 TEST(tg_esb, tc_esb_initService) {
     // init local variables
     int ret_run = -1;
 
     // preconditions
-    CHECK_EQUAL(false, cut_esb->getState_service());
+    CHECK_EQUAL(false, cut_esb->getState_ctrlService());
 
     // a.1: call run for initialization
     ret_run = cut_esb->run();
 
     // exp.1: check driver state
     CHECK_EQUAL(0, ret_run);
-    CHECK_EQUAL(true, cut_esb->getState_service());
+    CHECK_EQUAL(true, cut_esb->getState_ctrlService());
 }

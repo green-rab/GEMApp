@@ -1,25 +1,25 @@
 /**
- * # GEMA - Generic Embedded Main Application #
+ * # GEMApp - Generic Embedded Main Application #
  * 
- * - file: resgpio.h
+ * - file: drvGpio.h
  * 
  * - https://gitlab.com/green-rab
  * - Markus Schmidt, Germany, created: 13.08.2021
  **/
 
-#ifndef RES_GPIO_H
-#define RES_GPIO_H
+#ifndef DRVGPIO_H
+#define DRVGPIO_H
 
 
 /**
-    ## CLASS T_res_gpio(..) - Driver-Layer control GPIO ressources ##
+    ## CLASS T_drvGpio(..) - Control of GPIO ressources ##
 **/
-class T_res_gpio {
+class T_drvGpio {
     private:
 
     public:
-        T_res_gpio();
-        ~T_res_gpio();
+        T_drvGpio();
+        ~T_drvGpio();
 
         virtual bool init(int num, bool asOutput);
         virtual bool deinit(int num);
