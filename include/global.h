@@ -10,8 +10,6 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define TESTMODE
-
 #define APP_SHORTNAME   "GEMApp"
 #define APP_FULLNAME    "Generic Embedded Main Application"
 

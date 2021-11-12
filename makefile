@@ -1,31 +1,49 @@
-CXX       := g++
-CXX_FLAGS := -std=c++17 -ggdb
+# flags
+CXXCMD   := g++
+CXXFLAGS := -std=c++17 -ggdb
 
-BIN      := bin
-INCLUDE  := include
-SRC      := source
-SRC_UNIT := source/unit
-TST		 := test
-TST_SPY  := test/spy
-TST_UNIT := test/unit
-SERVICES := userServices
+# exe
+EXECUTABLE := gemapp
+BIN        := bin
+
+# path
+INCLUDE    := include
+SRC        := source/*.cpp
+SRC_UNIT   := source/unit/*.cpp
+SERVICE    := userServices/*.cpp
+TST        := test/*.cpp
+TST_UNIT   := test/unit/*.cpp
+TST_SPY    := test/spy/*.cpp
 
 LIBRARIES  :=
-EXECUTABLE := gemapp
 
-# for CppUTest
+# for CppUTest - only for debug build
 CPPUTEST_HOME = /usr/local
-CXXFLAGS += -I$(CPPUTEST_HOME)/include
-CXXFLAGS += -include $(CPPUTEST_HOME)/include/MemoryLeakDetectorNewMacros.h
-LIBRARIES += -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
 
-#all: $(BIN)/$(EXECUTABLE)
+# all: clean debug
 
-# run: clean all clear ./$(BIN)/$(EXECUTABLE)
+# debug
+debug:	$(BIN)/debug/$(EXECUTABLE)
+debug:	CXXCMD    += -DDEBUG -g
+debug:	CXXCMD    += -DTESTMODE
+debug:	CXXFLAGS  += -I$(CPPUTEST_HOME)/include
+# debug: CXXFLAGS  += -include $(CPPUTEST_HOME)/include/MemoryLeakDetectorNewMacros.h
+debug:	LIBRARIES += -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
 
-$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp $(SRC_UNIT)/*.cpp $(TST)/*.cpp $(TST_SPY)/*.cpp $(TST_UNIT)/*.cpp $(SERVICES)/*.cpp
-		$(CXX) $(CXX_FLAGS) -I$(INCLUDE) $^ -o $@ $(LIBRARIES)
+# rpi
+rpi:	$(BIN)/rpi/$(EXECUTABLE)
+rpi:	CXXCMD    += -O
+
+# debug
+$(BIN)/debug/$(EXECUTABLE): $(SRC) $(SRC_UNIT) $(SERVICE) $(TST) $(TST_UNIT) $(TST_SPY)
+		@ mkdir -p $(BIN)/debug
+		$(CXXCMD) $(CXXFLAGS) -I$(INCLUDE) $^ -o $@ $(LIBRARIES)
+
+# rpi
+$(BIN)/rpi/$(EXECUTABLE): $(SRC) $(SRC_UNIT) $(SERVICE)
+		@ mkdir -p $(BIN)/rpi
+		$(CXXCMD) $(CXXFLAGS) -I$(INCLUDE) $^ -o $@ $(LIBRARIES)
 
 clean:
-	rm -f $(BIN)/$(EXECUTABLE)
-	rm -rf $(BIN)/*.dSYM
+	rm -rf $(BIN)/debug
+	rm -rf $(BIN)/rpi

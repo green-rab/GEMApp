@@ -7,8 +7,10 @@
  * - Markus Schmidt, Germany, created: 11.08.2021
  **/
 
+#ifdef TESTMODE
 #include "CppUTest/CommandLineTestRunner.h"
 #include "CppUTest/TestRegistry.h"
+#endif
 
 #include "../include/global.h"
 #include "../include/unit/esb.h"
