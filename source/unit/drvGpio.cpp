@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstring>
 using namespace std;
 
 #include "../../include/global.h"
