@@ -16,6 +16,7 @@
 **/
 class T_drvGpio {
     private:
+        unsigned int delay100ms = 100000;
 
     public:
         T_drvGpio();
