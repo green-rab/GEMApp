@@ -161,7 +161,7 @@ bool T_drvGpio::getStateInit(int num, bool &state_init) {
         state_init = true;
 
         fileDirection.close();
-        usleep(delayFileClose);
+        //usleep(delayFileClose);
     }
 
     return true;
@@ -204,7 +204,7 @@ bool T_drvGpio::getStateDirection(int num, bool &state_direction) {
     }
 
     fileDirection.close();
-    usleep(delayFileClose);
+    //usleep(delayFileClose);
 
     return true;
 }
