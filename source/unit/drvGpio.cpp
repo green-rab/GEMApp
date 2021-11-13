@@ -49,12 +49,14 @@ bool T_drvGpio::init(int num, bool asOutput) {
     // file EXPORT
     fileExport.open("/sys/class/gpio/export");
     if(!fileExport.is_open()) {
+        callPrintf(".. export is_open() failed!\n");
         return false;
     }
 
     sprintf(writeValue, "%d", num);
     fileExport << writeValue;
     if(!fileExport.good()) {
+        callPrintf(".. export good() failed!\n");
         return false;
     }
 
@@ -64,6 +66,7 @@ bool T_drvGpio::init(int num, bool asOutput) {
     sprintf(path, "/sys/class/gpio/gpio%d/direction", num);
     fileDirection.open(path);
     if(!fileDirection.is_open()) {
+        callPrintf(".. direction is_open() failed!\n");
         return false;
     }
     
@@ -73,6 +76,7 @@ bool T_drvGpio::init(int num, bool asOutput) {
         fileDirection << "in";
     }
     if(!fileDirection.good()) {
+        callPrintf(".. direction good() failed!\n");
         return false;
     }
 
@@ -83,11 +87,13 @@ bool T_drvGpio::init(int num, bool asOutput) {
         sprintf(path, "/sys/class/gpio/gpio%d/value", num);
         fileValue.open(path);
         if(!fileValue.is_open()) {
+            callPrintf(".. value is_open() failed!\n");
             return false;
         }
 
         fileValue << "0";
         if(!fileValue.good()) {
+            callPrintf(".. value good() failed!\n");
             return false;
         }
 

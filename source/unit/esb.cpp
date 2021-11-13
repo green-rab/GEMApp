@@ -72,8 +72,8 @@ int T_ESB::run() {
     ptr_ctrlService->init_scheduleSync10ms(n_times);
 
     #ifndef TESTMODE
-    printf("Press ENTER to stop ...");
-    system("read");
+    printf("Press <CTRL> <C> to cancel (has to be reworked) ...");
+    while(1);
     #endif
 
     ptr_ctrlService->cancel_scheduleSync10ms();
