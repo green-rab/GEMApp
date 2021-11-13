@@ -32,7 +32,7 @@ debug:	LIBRARIES += -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
 
 # rpi
 rpi:	$(BIN)/rpi/$(EXECUTABLE)
-rpi:	CXXCMS    += -pthread
+rpi:	CXXCMD    += -pthread
 rpi:	CXXCMD    += -O
 
 # debug
