@@ -208,6 +208,8 @@ bool T_ctrlDriver::init() {
 
             ret_initGpio = initGpio();
             if(ret_initGpio == false) {
+                callPrintf("-> ABORT: Initialization of all GPIOs failed\n");
+
                 state = ERROR;
                 return false;
             }

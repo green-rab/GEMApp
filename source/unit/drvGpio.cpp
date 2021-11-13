@@ -78,19 +78,21 @@ bool T_drvGpio::init(int num, bool asOutput) {
 
     fileDirection.close();
 
-    // file VALUE
-    sprintf(path, "/sys/class/gpio/gpio%d/value", num);
-    fileValue.open(path);
-    if(!fileValue.is_open()) {
-        return false;
-    }
+    // file VALUE (if set as output)
+    if(asOutput == true) {
+        sprintf(path, "/sys/class/gpio/gpio%d/value", num);
+        fileValue.open(path);
+        if(!fileValue.is_open()) {
+            return false;
+        }
 
-    fileValue << "0";
-    if(!fileValue.good()) {
-        return false;
-    }
+        fileValue << "0";
+        if(!fileValue.good()) {
+            return false;
+        }
 
-    fileValue.close();
+        fileValue.close();
+    }
 
     return true;
 }
