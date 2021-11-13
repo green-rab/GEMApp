@@ -260,9 +260,6 @@ bool T_drvGpio::write(int num, bool value) {
 
     ofstream fileValue;
 
-    // set standard return-value
-    value = false;
-
     #ifdef TESTMODE
     return true;
     #endif
