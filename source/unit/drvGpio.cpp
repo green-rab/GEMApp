@@ -234,9 +234,9 @@ bool T_drvGpio::read(int num, bool &value) {
     }
 
     fileValue >> readValue;
-    if(strcmp(readValue, "1")) {
+    if(!strcmp(readValue, "1")) {
         value = true;
-    } else if(strcmp(readValue, "0")) {
+    } else if(!strcmp(readValue, "0")) {
         value = false;
     } else {
         return false;
