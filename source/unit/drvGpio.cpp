@@ -192,9 +192,9 @@ bool T_drvGpio::getStateDirection(int num, bool &state_direction) {
     }
 
     fileDirection >> readvalue;
-    if(strcmp(readvalue, "out")) {
+    if(!strcmp(readvalue, "out")) {
         state_direction = true;
-    } else if(strcmp(readvalue, "in")) {
+    } else if(!strcmp(readvalue, "in")) {
         state_direction = false;
     } else {
         return false;

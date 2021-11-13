@@ -37,9 +37,4 @@ void T_dummy_service::execute(t_GEMApp_data &data) {
     if(data.GPIO_13 == true) {
         data.GPIO_12 = true;
     }
-
-    printf(".");
-    if(data.GPIO_12 == true) {
-        printf("LED ON!\n");
-    }
 }
