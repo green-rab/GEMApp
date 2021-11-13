@@ -62,7 +62,7 @@ bool T_drvGpio::init(int num, bool asOutput) {
     }
 
     fileExport.close();
-    usleep(delay100ms);
+    usleep(delayFileClose);
 
     // file DIRECTION
     sprintf(path, "/sys/class/gpio/gpio%d/direction", num);
@@ -83,7 +83,7 @@ bool T_drvGpio::init(int num, bool asOutput) {
     }
 
     fileDirection.close();
-    usleep(delay100ms);
+    usleep(delayFileClose);
 
     // file VALUE (if set as output)
     if(asOutput == true) {
@@ -101,7 +101,7 @@ bool T_drvGpio::init(int num, bool asOutput) {
         }
 
         fileValue.close();
-        usleep(delay100ms);
+        usleep(delayFileClose);
     }
 
     return true;
@@ -133,7 +133,7 @@ bool T_drvGpio::deinit(int num) {
     }
 
     fileUnexport.close();
-    usleep(delay100ms);
+    usleep(delayFileClose);
 
     return true;
 }
@@ -161,7 +161,7 @@ bool T_drvGpio::getStateInit(int num, bool &state_init) {
         state_init = true;
 
         fileDirection.close();
-        usleep(delay100ms);
+        usleep(delayFileClose);
     }
 
     return true;
@@ -204,7 +204,7 @@ bool T_drvGpio::getStateDirection(int num, bool &state_direction) {
     }
 
     fileDirection.close();
-    usleep(delay100ms);
+    usleep(delayFileClose);
 
     return true;
 }
@@ -246,7 +246,7 @@ bool T_drvGpio::read(int num, bool &value) {
     }
 
     fileValue.close();
-    usleep(delay100ms);
+    //usleep(delayFileClose);
 
     return true;
 }
@@ -284,7 +284,7 @@ bool T_drvGpio::write(int num, bool value) {
     }
 
     fileValue.close();
-    usleep(delay100ms);
+    //usleep(delayFileClose);
 
     return true;
 }

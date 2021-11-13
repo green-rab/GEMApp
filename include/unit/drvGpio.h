@@ -16,7 +16,7 @@
 **/
 class T_drvGpio {
     private:
-        unsigned int delay100ms = 100000;
+        unsigned int delayFileClose = 100;
 
     public:
         T_drvGpio();
