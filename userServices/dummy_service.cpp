@@ -30,7 +30,7 @@ T_dummy_service::~T_dummy_service() {
 void T_dummy_service::execute(t_GEMApp_data &data) {
     data.GPIO_12 = false;
 
-    if(data.GPIO_05 == true && data.GPIO_06 == true) {
+    if(data.GPIO_05 == false && data.GPIO_06 == false) {
         data.GPIO_12 = true;
     }
     
