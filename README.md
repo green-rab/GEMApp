@@ -1,10 +1,8 @@
 # GEMApp #
 
-The **Generic Embedded Main Application** is kind of a basic software for embedded boards like the Raspberry Pi, BeagleBone, etc. The goal is to decouple the part of initializing the hardware-ressources and cyclic call of the application code to let you focus on the real functionality.
+The **Generic Embedded Main Application** is kind of a basic software for embedded boards like the Raspberry Pi, BeagleBone, etc written in C++. The goal is to decouple the part of initializing the hardware-ressources and cyclic call of the application code to let you focus on the real functionality.
 
-Therefore you only have to prepare the config.h, add your source files (C++) to the userSerices-directory and register them in the gemapp.cpp. Please follow detailed the description in the HowTo-section.
-
-*Actual version:* **0.1**
+Therefore you only have to prepare the config.h, add your source files (C++) to the 'userSerices'-directory and register them in the 'gemapp.cpp'. Please follow the detailed description in the HowTo-section.
 
 ## Supported hardware ##
 
@@ -12,7 +10,7 @@ Devices:
 
 - Raspberry Pi 4 _(other devices not tested at the moment but it should be working on most RPi's)_
 
-Hardware ressources:
+Hardware-ressources:
 
 - GPIOs _(at the moment only following numbers: 05, 06, 12, 13, 26 - will be completed soon)_
 
@@ -36,7 +34,13 @@ Open 'include/config.h' and edit the #define's:
 #define CONFIG_GPIO_26 UNUSED
 ```
 
-Every GPIO can have the mode INPUT, OUTPUT or UNUSED. At the moment no more GPIOs and other hardware-ressources are available.
+Every GPIO can have following modes:
+
+- INPUT
+- OUTPUT
+- UNUSED
+
+At the moment no more GPIOs and other hardware-ressources are available.
 
 ### Include types to your code ###
 
@@ -100,7 +104,7 @@ void execute_sync10ms_shutdown() {
 }
 ```
 
-### Compile and execute your application ###
+### Compile and execute ###
 
 For compiling please do:
 
@@ -108,7 +112,7 @@ For compiling please do:
 make rpi
 ```
 
-The 'rpi' is very important without you are in a debug-session at build will fail, because it cannot find CppUTest.
+The 'rpi' is very important without you are in a debug-session and build will fail, because it cannot find CppUTest-project.
 
 If compiling is successful you can run your application:
 
@@ -116,14 +120,44 @@ If compiling is successful you can run your application:
 bin/rpi/gemapp
 ```
 
-Thats it! :)
+## Look inside ##
 
-## Look inside GEMApp ##
+The application consists of three main parts:
 
-![GEMApp concept](https://lucid.app/publicSegments/view/85b31837-cd69-4143-89e4-9f37333d53a8/image.png "Concept")
+- Enterprise Service Bus (ESB) -> source/esb.cpp
+- Driver-Layer for hardware-ressources -> source/ctrlDriver.cpp
+- Service-Layer for user-functionality -> source/ctrlService.cpp
+
+The ESB is the main sheduler that initializes both abstraction layers. First the driver-layer is intialized with the user specified configuration for selection of device and its hardware-ressources (config.h). Secondally the ESB initializes the service-layer where user functions or classes are added and sheduled cyclically.
+
+Please note that all pictures are simplified and not fully detailed
+
+![GEMApp concept](https://lucid.app/publicSegments/view/85b31837-cd69-4143-89e4-9f37333d53a8/image.png "concept")
+
+### Driver-Layer ###
+
+The driver-layer is called by the ESB and initializes the whole hardware-ressources. Therefore it exists only one init-function that is called. The desired configuration is read from the config.h and internally interpreted and checked. If there is an invalid configuration the init-function returns an error.
+
+For all types of ressources (GPIO, SPI, ...) are single init-functions called. They call the single driver-classes for every single ressource, like drvGpio.cpp for all GPIOs. All classes are instanced by the ESB and called by its pointer.
+
+![GEMApp driver-layer](https://lucid.app/publicSegments/view/53ff22e4-b8e1-44b4-b8a6-be60cfd13dc0/image.png "driver-layer")
+
+### Service-Layer ###
+
+The service-layer is called by the ESB, too. It is called after all hardware-ressources are successfully initialized by the driver layer and shedules the user-functions. Therefor it initializes an asynchronous timer with an interval of 10 ms that is called cyclically.
+
+In the function task_scheduleSync10ms there are three steps every cyclic call:
+
+1. Read all input values (e.g. GPIOs). The values are not read direct, it uses the interface of the driver-layer and stores all values in struct with name 'data'
+2. Call function execute_sync10ms(..) with the input data. The function has to be prepared by the user and calls directly user-specific functions or classes with 'data' as input parameters
+3. Write back the returned 'data' values. Therefore the driver-layer is used again to set the new output values (e.g. GPIOs)
+
+Theses steps will be executed every 10 ms. It is planned to append more constant delayed shedulers, 10 ms is only the first goal.
+
+![GEMApp service-layer](https://lucid.app/publicSegments/view/b654f2ac-fbf0-4bd9-be9c-682a3aeca9eb/image.png "service-layer")
 
 ## Version history ##
 
 | Version | Date | Description |
 | --- | --- | --- |
-| 0.1     | tbd  | basic gpio, tested on RPi 4 |
+| 0.1     | 22.01.2021 | basic gpio, tested for RPi 4 |
