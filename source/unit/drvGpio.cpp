@@ -54,7 +54,7 @@ bool T_drvGpio::init(int num, bool asOutput) {
         return false;
     }
 
-    sprintf(writeValue, "%d", num);
+    snprintf(writeValue, 2, "%d", num);
     fileExport << writeValue;
     if(!fileExport.good()) {
         callPrintf(".. export good() failed!\n");
@@ -65,7 +65,7 @@ bool T_drvGpio::init(int num, bool asOutput) {
     usleep(delayFileClose);
 
     // file DIRECTION
-    sprintf(path, "/sys/class/gpio/gpio%d/direction", num);
+    snprintf(path, 32, "/sys/class/gpio/gpio%d/direction", num);
     fileDirection.open(path);
     if(!fileDirection.is_open()) {
         callPrintf(".. direction is_open() failed!\n");
@@ -87,7 +87,7 @@ bool T_drvGpio::init(int num, bool asOutput) {
 
     // file VALUE (if set as output)
     if(asOutput == true) {
-        sprintf(path, "/sys/class/gpio/gpio%d/value", num);
+        snprintf(path, 28, "/sys/class/gpio/gpio%d/value", num);
         fileValue.open(path);
         if(!fileValue.is_open()) {
             callPrintf(".. value is_open() failed!\n");
@@ -126,7 +126,7 @@ bool T_drvGpio::deinit(int num) {
         return false;
     }
 
-    sprintf(writeValue, "%d", num);
+    snprintf(writeValue, 2, "%d", num);
     fileUnexport << writeValue;
     if(!fileUnexport.good()) {
         return false;
@@ -155,7 +155,7 @@ bool T_drvGpio::getStateInit(int num, bool &state_init) {
     #endif
 
     // file DIRECTION (to test if GPIO is available)
-    sprintf(path, "/sys/class/gpio/gpio%d/direction", num);
+    snprintf(path, 32, "/sys/class/gpio/gpio%d/direction", num);
     fileDirection.open(path);
     if(fileDirection.is_open()) {
         state_init = true;
@@ -185,7 +185,7 @@ bool T_drvGpio::getStateDirection(int num, bool &state_direction) {
     #endif
 
     // file DIRECTION
-    sprintf(path, "/sys/class/gpio/gpio%d/direction", num);
+    snprintf(path, 32, "/sys/class/gpio/gpio%d/direction", num);
     fileDirection.open(path);
     if(!fileDirection.is_open()) {
         return false;
@@ -227,7 +227,7 @@ bool T_drvGpio::read(int num, bool &value) {
     #endif
 
     // file VALUE
-    sprintf(path, "/sys/class/gpio/gpio%d/value", num);
+    snprintf(path, 28, "/sys/class/gpio/gpio%d/value", num);
     fileValue.open(path);
     if(!fileValue.is_open()) {
         return false;
@@ -265,7 +265,7 @@ bool T_drvGpio::write(int num, bool value) {
     #endif
 
     // file VALUE
-    sprintf(path, "/sys/class/gpio/gpio%d/value", num);
+    snprintf(path, 28, "/sys/class/gpio/gpio%d/value", num);
     fileValue.open(path);
     if(!fileValue.is_open()) {
         return false;
