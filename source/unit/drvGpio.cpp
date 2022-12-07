@@ -43,6 +43,11 @@ bool T_drvGpio::init(int num, bool asOutput) {
     ofstream fileDirection;
     ofstream fileValue;
 
+    size_t lenNum = 1;
+    if(num > 9) {
+        lenNum = 2;
+    }
+
     #ifdef TESTMODE
     return true;
     #endif
@@ -54,7 +59,7 @@ bool T_drvGpio::init(int num, bool asOutput) {
         return false;
     }
 
-    snprintf(writeValue, 2, "%d", num);
+    snprintf(writeValue, 1+lenNum, "%d", num);
     fileExport << writeValue;
     if(!fileExport.good()) {
         callPrintf(".. export good() failed!\n");
@@ -65,7 +70,7 @@ bool T_drvGpio::init(int num, bool asOutput) {
     usleep(delayFileClose);
 
     // file DIRECTION
-    snprintf(path, 32, "/sys/class/gpio/gpio%d/direction", num);
+    snprintf(path, 31+lenNum, "/sys/class/gpio/gpio%d/direction", num);
     fileDirection.open(path);
     if(!fileDirection.is_open()) {
         callPrintf(".. direction is_open() failed!\n");
@@ -87,7 +92,7 @@ bool T_drvGpio::init(int num, bool asOutput) {
 
     // file VALUE (if set as output)
     if(asOutput == true) {
-        snprintf(path, 28, "/sys/class/gpio/gpio%d/value", num);
+        snprintf(path, 27+lenNum, "/sys/class/gpio/gpio%d/value", num);
         fileValue.open(path);
         if(!fileValue.is_open()) {
             callPrintf(".. value is_open() failed!\n");
@@ -116,6 +121,11 @@ bool T_drvGpio::deinit(int num) {
 
     ofstream fileUnexport;
 
+    size_t lenNum = 1;
+    if(num > 9) {
+        lenNum = 2;
+    }
+
     #ifdef TESTMODE
     return true;
     #endif
@@ -126,7 +136,7 @@ bool T_drvGpio::deinit(int num) {
         return false;
     }
 
-    snprintf(writeValue, 2, "%d", num);
+    snprintf(writeValue, 1+lenNum, "%d", num);
     fileUnexport << writeValue;
     if(!fileUnexport.good()) {
         return false;
@@ -147,6 +157,11 @@ bool T_drvGpio::getStateInit(int num, bool &state_init) {
 
     ifstream fileDirection;
 
+    size_t lenNum = 1;
+    if(num > 9) {
+        lenNum = 2;
+    }
+
     // set standard return-value
     state_init = false;
 
@@ -155,7 +170,7 @@ bool T_drvGpio::getStateInit(int num, bool &state_init) {
     #endif
 
     // file DIRECTION (to test if GPIO is available)
-    snprintf(path, 32, "/sys/class/gpio/gpio%d/direction", num);
+    snprintf(path, 31+lenNum, "/sys/class/gpio/gpio%d/direction", num);
     fileDirection.open(path);
     if(fileDirection.is_open()) {
         state_init = true;
@@ -177,6 +192,11 @@ bool T_drvGpio::getStateDirection(int num, bool &state_direction) {
 
     ifstream fileDirection;
 
+    size_t lenNum = 1;
+    if(num > 9) {
+        lenNum = 2;
+    }
+
     // set standard return-value
     state_direction = false;
 
@@ -185,7 +205,7 @@ bool T_drvGpio::getStateDirection(int num, bool &state_direction) {
     #endif
 
     // file DIRECTION
-    snprintf(path, 32, "/sys/class/gpio/gpio%d/direction", num);
+    snprintf(path, 31+lenNum, "/sys/class/gpio/gpio%d/direction", num);
     fileDirection.open(path);
     if(!fileDirection.is_open()) {
         return false;
@@ -222,12 +242,17 @@ bool T_drvGpio::read(int num, bool &value) {
     // set standard return-value
     value = false;
 
+    size_t lenNum = 1;
+    if(num > 9) {
+        lenNum = 2;
+    }
+
     #ifdef TESTMODE
     return true;
     #endif
 
     // file VALUE
-    snprintf(path, 28, "/sys/class/gpio/gpio%d/value", num);
+    snprintf(path, 27+lenNum, "/sys/class/gpio/gpio%d/value", num);
     fileValue.open(path);
     if(!fileValue.is_open()) {
         return false;
@@ -260,12 +285,17 @@ bool T_drvGpio::write(int num, bool value) {
 
     ofstream fileValue;
 
+    size_t lenNum = 1;
+    if(num > 9) {
+        lenNum = 2;
+    }
+
     #ifdef TESTMODE
     return true;
     #endif
 
     // file VALUE
-    snprintf(path, 28, "/sys/class/gpio/gpio%d/value", num);
+    snprintf(path, 27+lenNum, "/sys/class/gpio/gpio%d/value", num);
     fileValue.open(path);
     if(!fileValue.is_open()) {
         return false;
