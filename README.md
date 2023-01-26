@@ -132,7 +132,7 @@ The ESB is the main sheduler that initializes both abstraction layers. First the
 
 Please note that all pictures are simplified and not fully detailed
 
-![GEMApp concept](https://lucid.app/publicSegments/view/85b31837-cd69-4143-89e4-9f37333d53a8/image.png "concept")
+![](pictures/GEMApp_concept.png)
 
 ### Driver-Layer ###
 
