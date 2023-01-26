@@ -140,7 +140,7 @@ The driver-layer is called by the ESB and initializes the whole hardware-ressour
 
 For all types of ressources (GPIO, SPI, ...) are single init-functions called. They call the single driver-classes for every single ressource, like drvGpio.cpp for all GPIOs. All classes are instanced by the ESB and called by its pointer.
 
-![GEMApp driver-layer](https://lucid.app/publicSegments/view/53ff22e4-b8e1-44b4-b8a6-be60cfd13dc0/image.png "driver-layer")
+![](pictures/GEMApp_driverLayer.png)
 
 ### Service-Layer ###
 
