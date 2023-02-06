@@ -154,7 +154,7 @@ In the function task_scheduleSync10ms there are three steps every cyclic call:
 
 Theses steps will be executed every 10 ms. It is planned to append more constant delayed shedulers, 10 ms is only the first goal.
 
-![GEMApp service-layer](https://lucid.app/publicSegments/view/b654f2ac-fbf0-4bd9-be9c-682a3aeca9eb/image.png "service-layer")
+![](pictures/GEMApp_serviceLayer.png)
 
 ## Version history ##
 
