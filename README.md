@@ -1,30 +1,63 @@
 # GEMApp #
 
-The **Generic Embedded Main Application** is kind of a basic software for embedded boards like the Raspberry Pi, BeagleBone, etc written in C++. The goal is to decouple the part of initializing the hardware-ressources and cyclic call of the application code to let you focus on the real functionality.
+[[Overview](#overview)] [[HowTo - use GEMApp for your own project](#howto)] [[Look inside](#lookInside)]
 
-Therefore you only have to prepare the config.h, add your source files (C++) to the 'userSerices'-directory and register them in the 'gemapp.cpp'. Please follow the detailed description in the HowTo-section.
+The **Generic Embedded Main Application** is kind of a basic software written in C++ for embedded boards like the Raspberry Pi. The goal is to decouple the part of initializing hardware-resources from the application code to let you focus on the implementation of functionality.
 
-## Supported hardware ##
+![](pictures/GEMApp_concept.png)
 
-Devices:
+<a name="overview"></a>
+## Overview ##
 
-- Raspberry Pi 4 _(other devices not tested at the moment but it should be working on most RPi's)_
+Remarks:
+- Please keep in mind it is a first **DEBUG** demo version with very limited functionality.
 
-Hardware-ressources:
+Version history:
 
-- GPIOs _(at the moment only following numbers: 05, 06, 12, 13, 26 - will be completed soon)_
+<table>
+	<tr>
+		<th align="center">Version</th>
+		<th align="left">New features</th>
+		<th align="left">Resolved bugs</th>
+	</tr>
+	<tr></tr>
+	<tr>
+		<td align="center" valign="top">v0.1</td>
+		<td align="left" valign="top">first version with limited hardware-resources<br>GPIOs supported: 05, 06, 12, 13, 26</td>
+		<td align="left" valign="top">-</td>
+	</tr>
+</table>
 
-## HowTo ##
+Supported devices:
 
-### Clone repository ###
+- Raspberry Pi 4 _(other devices are not tested at the moment but it should be working on several RPi's)_
 
-```bash
-git clone https://github.com/green-rab/GEMApp.git
-```
+Supported hardware-resources:
 
-### Edit configuration ###
+- GPIOs _(only following numbers: 05, 06, 12, 13, 26)_
 
-Open 'include/config.h' and edit the #define's:
+Open points:
+
+- Complete initialization for all gpios
+- Add communication interfaces
+
+<a name="howto"></a>
+## HowTo - use GEMApp for your own project ##
+
+Checkout or clone the repository. You have to edit:
+- config.h
+- gemapp.cpp
+
+Add to your code:
+- gemapp.h
+
+Place your source files into the folder 'userServices'
+
+That's it! ..I have tried to keep it as simple as possible 
+
+### Edit config.h ###
+
+Open 'include/config.h' and choose your desired configuration for the hardware-resources. Therefore you have to edit the #define statements, choose the keywords INPUT, OUTPUT or UNUSED for every line.
 
 ```cpp
 #define CONFIG_GPIO_05 INPUT
@@ -34,17 +67,9 @@ Open 'include/config.h' and edit the #define's:
 #define CONFIG_GPIO_26 UNUSED
 ```
 
-Every GPIO can have following modes:
+### Include gemapp.h for the data type to your code ###
 
-- INPUT
-- OUTPUT
-- UNUSED
-
-At the moment no more GPIOs and other hardware-ressources are available.
-
-### Include types to your code ###
-
-Add 'include/gemapp.h' to your code. It specifies a type that is handed over by reference and includes the actual read hardware-inputs:
+Add 'include/gemapp.h' to your code. It specifies a type that is handed over by reference and includes the actual read hardware-inputs. By writing to the reference you can write to the hardware-outputs that are handled after your code has finished.
 
 ```cpp
 struct t_GEMApp_data {
@@ -56,11 +81,12 @@ struct t_GEMApp_data {
 };
 ```
 
-In your code you have to directly manipulate the hardware-outputs that are then automatically written by GEMApp.
 
-### Integrate your source-files ###
+### Copy to folder ###
 
-Copy your files to the folder 'userServices'. You can have a look at the files 'dummy_service' for an example.
+Copy your source files to the folder 'userServices'. You can have a look to the files dummy_service.cpp and dummy_service.h as an example.
+
+### Edit gemapp.cpp ###
 
 Open 'source/gemapp.cpp' and declare your header-files:
 
@@ -74,7 +100,7 @@ If needed you can specify local variables (dummy_service is used as a class):
 T_dummy_service *dummy_service;
 ```
 
-Then at the moment you can only choose a cyclic execution with a cycle of 10 ms. At the execution routine of your class or the function that has to be called in the following section:
+At the moment you can only choose a cyclic execution with a cycle time of 10 ms. Add the execution routine of your class or your function that has to be called in the following section:
 
 ```cpp
 void execute_sync10ms(t_GEMApp_data &data) {
@@ -82,7 +108,7 @@ void execute_sync10ms(t_GEMApp_data &data) {
 }
 ```
 
-Please add your used hardware-ressources in the startup-section. Optionally you can add something for your code at startup and shutdown e.g. initialization of your class:
+Please add your used hardware-resources in the startup-section. Optionally you can add something for your code at startup and shutdown e.g. initialization of your class:
 
 ```cpp
 void execute_sync10ms_startup() {
@@ -106,58 +132,47 @@ void execute_sync10ms_shutdown() {
 
 ### Compile and execute ###
 
-For compiling please do:
+For compiling please call make with parameter 'rpi'. _(without 'rpi' you are in a debug-session and build will fail)_
 
 ```bash
 make rpi
 ```
 
-The 'rpi' is very important without you are in a debug-session and build will fail, because it cannot find CppUTest-project.
-
-If compiling is successful you can run your application:
+If compile is successful done you can run your application:
 
 ```bash
 bin/rpi/gemapp
 ```
 
+<a name="lookInside"></a>
 ## Look inside ##
 
 The application consists of three main parts:
 
-- Enterprise Service Bus (ESB) -> source/esb.cpp
-- Driver-Layer for hardware-ressources -> source/ctrlDriver.cpp
-- Service-Layer for user-functionality -> source/ctrlService.cpp
+- Enterprise Service Bus (ESB) _(source/esb.cpp)_
+- Driver-Layer for hardware-resources _(source/ctrlDriver.cpp)_
+- Service-Layer for user functionality _(source/ctrlService.cpp)_
 
-The ESB is the main sheduler that initializes both abstraction layers. First the driver-layer is intialized with the user specified configuration for selection of device and its hardware-ressources (config.h). Secondally the ESB initializes the service-layer where user functions or classes are added and sheduled cyclically.
+The ESB is the main sheduler that initializes both abstraction layers, driver for hardware-resources and service for handling user application code.
 
-Please note that all pictures are simplified and not fully detailed
-
-![](pictures/GEMApp_concept.png)
+_(Please note that all pictures are simplified and not fully detailed)_
 
 ### Driver-Layer ###
 
-The driver-layer is called by the ESB and initializes the whole hardware-ressources. Therefore it exists only one init-function that is called. The desired configuration is read from the config.h and internally interpreted and checked. If there is an invalid configuration the init-function returns an error.
+The driver-layer initializes the whole hardware-resources. Therefore only one init function has to be called. The desired configuration is read from the **config.h** and internally checked and interpreted. An invalid configuration throws back an error.
 
-For all types of ressources (GPIO, SPI, ...) are single init-functions called. They call the single driver-classes for every single ressource, like drvGpio.cpp for all GPIOs. All classes are instanced by the ESB and called by its pointer.
+For all types of resources (GPIO, SPI, ...) drives are implemented. All drivers are initialized by the ESB, too.
 
 ![](pictures/GEMApp_driverLayer.png)
 
 ### Service-Layer ###
 
-The service-layer is called by the ESB, too. It is called after all hardware-ressources are successfully initialized by the driver layer and shedules the user-functions. Therefor it initializes an asynchronous timer with an interval of 10 ms that is called cyclically.
+The service-layer is called after all hardware-resources are successfully initialized. It shedules the user functionality. Therefor it initializes an asynchronous timer with an interval of 10 ms that is called periodically.
 
-In the function task_scheduleSync10ms there are three steps every cyclic call:
+In the function 'task_scheduleSync10ms' there are three steps every cyclic call:
 
-1. Read all input values (e.g. GPIOs). The values are not read direct, it uses the interface of the driver-layer and stores all values in struct with name 'data'
-2. Call function execute_sync10ms(..) with the input data. The function has to be prepared by the user and calls directly user-specific functions or classes with 'data' as input parameters
+1. Read all input values (e.g. GPIOs). The values are not read direct, it uses the interface of the driver-layer and stores all values in a struct with the name 'data'
+2. Call function execute_sync10ms(..) with the input data. The function has to be prepared by the user and calls directly user-specific functions or classes with 'data' as input parameter
 3. Write back the returned 'data' values. Therefore the driver-layer is used again to set the new output values (e.g. GPIOs)
 
-Theses steps will be executed every 10 ms. It is planned to append more constant delayed shedulers, 10 ms is only the first goal.
-
 ![](pictures/GEMApp_serviceLayer.png)
-
-## Version history ##
-
-| Version | Date | Description |
-| --- | --- | --- |
-| 0.1     | 22.01.2021 | basic gpio, tested for RPi 4 |
