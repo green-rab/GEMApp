@@ -8,7 +8,6 @@
  **/
 
 #include "CppUTest/TestHarness.h"
-// #include "CppUTestExt/MockSupport.h"
 
 #include <string>
 #include <sstream>
@@ -35,9 +34,6 @@ TEST_GROUP(tg_esb) {
         // init SPYs
         spy_utilsOutput = new T_spy_utilsOutput(1000);
 
-        // init STUBs
-        // ...
-    
         // init CUT
         cut_esb = new T_ESB(1, NULL);
 
@@ -51,8 +47,6 @@ TEST_GROUP(tg_esb) {
 
         delete spy_utilsOutput;
         spy_utilsOutput = nullptr;
-
-        // mock().clear();
     }
 };
 

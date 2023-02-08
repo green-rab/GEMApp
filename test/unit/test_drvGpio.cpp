@@ -32,8 +32,6 @@ TEST_GROUP(tg_res_gpio) {
     void teardown() {
         delete cut_drvGpio;
         cut_drvGpio = nullptr;
-
-        // mock().clear();
     }
 };
 
@@ -51,8 +49,6 @@ TEST(tg_res_gpio, tc_res_gpio_initAsInput) {
     int test_gpio = 05;
     bool ret_state = false;
 
-    // preconditions
-
     // a.1: initialize gpio as input
     ret_state = cut_drvGpio->init(test_gpio, false);
 
@@ -63,8 +59,6 @@ TEST(tg_res_gpio, tc_res_gpio_initAsOutput) {
     // init local variables
     int test_gpio = 05;
     bool ret_state = false;
-
-    // preconditions
 
     // a.1: initialize gpio as output
     ret_state = cut_drvGpio->init(test_gpio, true);
@@ -84,8 +78,6 @@ TEST(tg_res_gpio, tc_res_gpio_deinit) {
     int test_gpio = 05;
     bool ret_state = false;
 
-    // preconditions
-
     // a.1: deinitialize gpio
     ret_state = cut_drvGpio->deinit(test_gpio);
 
@@ -95,7 +87,7 @@ TEST(tg_res_gpio, tc_res_gpio_deinit) {
 
 
 /**
-    Get state values of gpiogpio.
+    Get state values of gpio.
 
     - TEST tc_res_gpio_getStateInit(..)
     - TEST tc_res_gpio_getStateDirection(..)
@@ -105,8 +97,6 @@ TEST(tg_res_gpio, tc_res_gpio_getStateInit) {
     int test_gpio = 05;
     bool ret_state = false;
     bool ret_valInit = true;
-
-    // preconditions
 
     // a.1: get state of initialization
     ret_state = cut_drvGpio->getStateInit(test_gpio, ret_valInit);
@@ -120,8 +110,6 @@ TEST(tg_res_gpio, tc_res_gpio_getStateDirection) {
     int test_gpio = 05;
     bool ret_state = false;
     bool ret_valDirection = true;
-
-    // preconditions
 
     // a.1: get state of direction
     ret_state = cut_drvGpio->getStateDirection(test_gpio, ret_valDirection);
@@ -142,8 +130,6 @@ TEST(tg_res_gpio, tc_res_gpio_read) {
     int test_gpio = 05;
     bool ret_state = false;
     bool ret_value = true;
-
-    // preconditions
 
     // a.1: read gpio
     ret_state = cut_drvGpio->read(test_gpio, ret_value);
@@ -166,8 +152,6 @@ TEST(tg_res_gpio, tc_res_gpio_writeZero) {
     bool test_value = false;
     bool ret_state = false;
 
-    // preconditions
-
     // a.1: write gpio to '0'
     ret_state = cut_drvGpio->write(test_gpio, test_value);
 
@@ -179,8 +163,6 @@ TEST(tg_res_gpio, tc_res_gpio_writeOne) {
     int test_gpio = 05;
     bool test_value = true;
     bool ret_state = false;
-
-    // preconditions
 
     // a.1: write gpio to '1'
     ret_state = cut_drvGpio->write(test_gpio, test_value);

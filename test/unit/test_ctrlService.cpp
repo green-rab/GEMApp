@@ -8,7 +8,6 @@
  **/
 
 #include "CppUTest/TestHarness.h"
-// #include "CppUTestExt/MockSupport.h"
 
 #include <string>
 #include <sstream>
@@ -53,9 +52,6 @@ TEST_GROUP(tg_service) {
         spy_userService = new T_spy_userService();
         spy_utilsOutput = new T_spy_utilsOutput(1000);
 
-        // init STUBs
-        // ...
-    
         // init CUT
         cut_ctrlService = new T_ctrlService(spy_ctrlDriver);
 
@@ -80,8 +76,6 @@ TEST_GROUP(tg_service) {
 
         delete spy_utilsOutput;
         spy_utilsOutput = nullptr;
-
-        // mock().clear();
     }
 
     bool inTolerance(float minValue, float maxValue, float value) {
@@ -105,8 +99,6 @@ TEST(tg_service, tc_service_initScheduleSync10ms) {
     bool ret_init = false;
     ostringstream test_stream;
 
-    // preconditions
-
     // a.1: call init function
     ret_init = cut_ctrlService->init_scheduleSync10ms();
 
@@ -116,14 +108,11 @@ TEST(tg_service, tc_service_initScheduleSync10ms) {
     test_stream.str("");
     test_stream.clear();
     test_stream << "Schedule sync 10 ms initialization.. successful\n";
-    // STRCMP_EQUAL(test_stream.str().c_str(), spy_utilsOutput->getBuffer());
 }
 TEST(tg_service, tc_service_initScheduleSync100ms) {
     // init local variables
     bool ret_init = false;
     ostringstream test_stream;
-
-    // preconditions
 
     // a.1: call init function
     ret_init = cut_ctrlService->init_scheduleSync100ms();
@@ -134,7 +123,6 @@ TEST(tg_service, tc_service_initScheduleSync100ms) {
     test_stream.str("");
     test_stream.clear();
     test_stream << "Schedule sync 100 ms initialization.. successful\n";
-    //STRCMP_EQUAL(test_stream.str().c_str(), spy_utilsOutput->getBuffer());
 }
 
 
@@ -151,8 +139,6 @@ TEST(tg_service, tc_service_sync10ms_executeOnce) {
     // init local variables
     bool ret_init = false;
 
-    // preconditions
-
     // exp.0: check initialization state
     CHECK_EQUAL(0, spy_userService->test_getServiceCalls());
 
@@ -167,8 +153,6 @@ TEST(tg_service, tc_service_sync10ms_executeOnce) {
 TEST(tg_service, tc_service_sync10ms_execute3times) {
     // init local variables
     bool ret_init = false;
-
-    // preconditions
 
     // exp.0: check initialization state
     CHECK_EQUAL(0, spy_userService->test_getServiceCalls());
@@ -188,8 +172,6 @@ TEST(tg_service, tc_service_sync10ms_executePeriodically) {
     float ret_timestamp = 0.0;
     float set_minValue = 0.0;
     float set_maxValue = 0.0;
-
-    // preconditions
 
     // a.1: call initialization
     ret_init = cut_ctrlService->init_scheduleSync10ms(15);
@@ -216,8 +198,6 @@ TEST(tg_service, tc_service_sync10ms_abort) {
     // init local variables
     bool ret_init = false;
     bool ret_cancel = false;
-
-    // preconditions
 
     // a.1: call init function with parameter 0 (endless loop)
     ret_init = cut_ctrlService->init_scheduleSync10ms(0);
@@ -333,21 +313,16 @@ TEST(tg_service, tc_service_sync10ms_defineGpios) {
     int  cnt_inputs  = 0;
     int  cnt_outputs = 0;
 
-    // preconditions
-
-    // a.1: -
-    // ...
-
-    // exp.1: check inputs and outputs are filled
+    // exp.0: check inputs and outputs are filled
     CHECK_EQUAL(false, execute_sync10ms_INPUTS.empty());
     CHECK_EQUAL(false, execute_sync10ms_OUTPUTS.empty());
 
-    // a.2: call init function
+    // a.1: call init function
     cnt_inputs  = execute_sync10ms_INPUTS.size();
     cnt_outputs = execute_sync10ms_OUTPUTS.size();
     ret_init = cut_ctrlService->init_scheduleSync10ms(3);
 
-    // exp.2: check size of vector is same as at startup
+    // exp.1: check size of vector is same as at startup
     while(cut_ctrlService->status_scheduleSync10ms() == true);
     CHECK_EQUAL(true, ret_init);
     CHECK_EQUAL(cnt_inputs,  execute_sync10ms_INPUTS.size());

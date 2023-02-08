@@ -13,7 +13,7 @@
 #define APP_SHORTNAME   "GEMApp"
 #define APP_FULLNAME    "Generic Embedded Main Application"
 
-#define APP_VERSION     "0.0.1"
+#define APP_VERSION     "0.1.0"
 
 
 /**

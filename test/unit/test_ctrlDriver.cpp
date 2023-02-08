@@ -8,7 +8,6 @@
  **/
 
 #include "CppUTest/TestHarness.h"
-// #include "CppUTestExt/MockSupport.h"
 
 #include <string>
 #include <sstream>
@@ -45,8 +44,6 @@ TEST_GROUP(tg_config) {
 
         delete spy_drvGpio;
         spy_drvGpio = nullptr;
-
-        // mock().clear();
     }
 };
 
@@ -68,8 +65,6 @@ TEST(tg_config, tc_config_rawDevice) {
     // init local variables
     string ret_configRaw;
 
-    // preconditions
-
     // a.1: read 'device' constant in config.h
     ret_configRaw = cut_ctrlDriver->getConfig_device_raw();
     printf("str_test CONFIG_DEVICE:  <%s>\n", ret_configRaw.c_str());
@@ -82,8 +77,6 @@ TEST(tg_config, tc_config_rawDevice) {
 TEST(tg_config, tc_config_rawGpio05) {
     // init local variables
     string ret_configRaw;
-
-    // preconditions
 
     // a.1: read 'gpio05' constant in config.h
     ret_configRaw = cut_ctrlDriver->getConfig_gpio05_raw();
@@ -99,8 +92,6 @@ TEST(tg_config, tc_config_rawGpio06) {
     // init local variables
     string ret_configRaw;
 
-    // preconditions
- 
     // a.1: read 'gpio06' constant in config.h
     ret_configRaw = cut_ctrlDriver->getConfig_gpio06_raw();
     printf("str_test CONFIG_GPIO_06: <%s>\n", ret_configRaw.c_str());
@@ -114,8 +105,6 @@ TEST(tg_config, tc_config_rawGpio06) {
 TEST(tg_config, tc_config_rawGpio12) {
     // init local variables
     string ret_configRaw;
-
-    // preconditions
 
     // a.1: read 'gpio12' constant in config.h
     ret_configRaw = cut_ctrlDriver->getConfig_gpio12_raw();
@@ -131,8 +120,6 @@ TEST(tg_config, tc_config_rawGpio13) {
     // init local variables
     string ret_configRaw;
 
-    // preconditions
-
     // a.1: read 'gpio13' constant in config.h
     ret_configRaw = cut_ctrlDriver->getConfig_gpio13_raw();
     printf("str_test CONFIG_GPIO_13: <%s>\n", ret_configRaw.c_str());
@@ -146,8 +133,6 @@ TEST(tg_config, tc_config_rawGpio13) {
 TEST(tg_config, tc_config_rawGpio26) {
     // init local variables
     string ret_configRaw;
-
-    // preconditions
 
     // a.1: read 'gpio26' constant in config.h
     ret_configRaw = cut_ctrlDriver->getConfig_gpio26_raw();
@@ -227,8 +212,6 @@ TEST_GROUP(tg_driver) {
 
         delete spy_utilsOutput;
         spy_utilsOutput = nullptr;
-
-        // mock().clear();
     }
 
     void stub_setAllGpiosAsInput_RPi() {
@@ -282,8 +265,6 @@ TEST(tg_driver, tc_driver_configEnumDevice) {
     // init local variables
     T_enum_driverDevice ret_device;
 
-    // preconditions
-
     // a.1: set stub 'NONE' and call function
     stub_device = "NONE";
     ret_device = cut_ctrlDriver->getConfig_device();
@@ -331,8 +312,6 @@ TEST(tg_driver, tc_driver_configEnumGpios) {
     // init test-data
     string data_stub_gpio[cnt] = {"UNUSED", "INPUT", "OUTPUT", "xyz", ""};
     T_enum_driverGpio exp_gpio[cnt] = {UNUSED, INPUT, OUTPUT, UNUSED, UNUSED};
-
-    // preconditions
 
     for(int i=0; i<cnt; i++) {
         // a.x: set stub and call function for decode string to enum-value

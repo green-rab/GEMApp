@@ -8,7 +8,6 @@
  **/
 
 #include "CppUTest/TestHarness.h"
-// #include "CppUTestExt/MockSupport.h"
 
 #include "../include/global.h"
 
@@ -19,21 +18,12 @@
     ## TESTGROUP tg_main(..) - Test-group (tg) for 'main' including following testcases (tc) ##
 **/
 TEST_GROUP(tg_main) {
-    // CUT code-under-test
-    // ...
-
     // SPYs
     T_spy_utilsOutput *spy_utilsOutput;
 
     void setup() {
         // init SPYs
         spy_utilsOutput = new T_spy_utilsOutput(1000);
-
-        // init STUBs
-        // ...
-    
-        // init CUT
-        // ...
 
         // set function pointers
         UT_PTR_SET(callPrintf, spy_utilsOutput->printf);
@@ -42,8 +32,6 @@ TEST_GROUP(tg_main) {
     void teardown() {
         delete spy_utilsOutput;
         spy_utilsOutput = nullptr;
-
-        // mock().clear();
     }
 };
 
@@ -64,8 +52,6 @@ TEST(tg_main, tc_main_compile) {
     - TEST tc_main_utilsOutput(..)
 **/
 TEST(tg_main, tc_main_utilsOutput) {
-    // init local variables
-
     // preconditions
     spy_utilsOutput->create(20); // call is optional
 
