@@ -3,8 +3,8 @@
  * 
  * - file: spy_ctrlDriver.h
  * 
- * - https://gitlab.com/green-rab
- * - Markus Schmidt, Germany, created: 07.10.2021
+ * - https://github.com/green-rab/GEMApp
+ * - Markus Gutermann, Germany, created: 07.10.2021
  **/
 
 #ifndef SPY_CTRLDRIVER_H

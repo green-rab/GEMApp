@@ -3,8 +3,8 @@
  * 
  * - file: spy_utilsOutput.h
  * 
- * - https://gitlab.com/green-rab
- * - Markus Schmidt, Germany, created: 23.08.2021
+ * - https://github.com/green-rab/GEMApp
+ * - Markus Gutermann, Germany, created: 23.08.2021
  **/
 
 #ifndef SPY_UTILSOUTPUT_H

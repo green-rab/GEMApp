@@ -3,8 +3,8 @@
  * 
  * - file: dummy_service.cpp
  * 
- * - https://gitlab.com/green-rab
- * - Markus Schmidt, Germany, created: 21.10.2021
+ * - https://github.com/green-rab/GEMApp
+ * - Markus Gutermann, Germany, created: 21.10.2021
  **/
 
 #include "dummy_service.h"

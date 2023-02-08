@@ -3,8 +3,8 @@
  * 
  * - file: ctrlService.cpp
  * 
- * - https://gitlab.com/green-rab
- * - Markus Schmidt, Germany, created: 18.09.2021
+ * - https://github.com/green-rab/GEMApp
+ * - Markus Gutermann, Germany, created: 18.09.2021
  **/
 
 #include <thread>

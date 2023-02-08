@@ -3,8 +3,8 @@
  * 
  * - file: drvGpio.h
  * 
- * - https://gitlab.com/green-rab
- * - Markus Schmidt, Germany, created: 13.08.2021
+ * - https://github.com/green-rab/GEMApp
+ * - Markus Gutermann, Germany, created: 13.08.2021
  **/
 
 #ifndef DRVGPIO_H

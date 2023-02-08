@@ -3,8 +3,8 @@
  * 
  * - file: spy_userService.h
  * 
- * - https://gitlab.com/green-rab
- * - Markus Schmidt, Germany, created: 19.09.2021
+ * - https://github.com/green-rab/GEMApp
+ * - Markus Gutermann, Germany, created: 19.09.2021
  **/
 
 #ifndef SPY_USERSERVICE_01_H
